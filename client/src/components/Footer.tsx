@@ -115,15 +115,7 @@ export default function Footer() {
                 <DiscordIcon className="text-[#FFD700] mt-1 mr-3 h-5 w-5 flex-shrink-0" />
                 <span className="text-gray-400">discord.gg/zyrovisuals</span>
               </li>
-              <li className="flex items-start">
-                <LinkedInIcon className="text-[#FFD700] mt-1 mr-3 h-5 w-5 flex-shrink-0" />
-                <a href="https://www.linkedin.com/in/shivamrathod721" 
-                   target="_blank" 
-                   rel="noopener noreferrer"
-                   className="text-gray-400 hover:text-[#FFD700] transition-colors duration-300">
-                  Connect on LinkedIn
-                </a>
-              </li>
+              {/* LinkedIn placeholder for Zyro Visuals */}
               <li className="flex items-start">
                 <ClockIcon className="text-[#FFD700] mt-1 mr-3 h-5 w-5 flex-shrink-0" />
                 <span className="text-gray-400">Response Time: Within 24 hours</span>

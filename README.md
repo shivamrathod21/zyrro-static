@@ -89,8 +89,8 @@ To access the admin dashboard:
 
 1. Navigate to `/admin/login`
 2. Use the following credentials:
-   - Username: `admin`
-   - Password: `password123`
+   - Username: `shakti`
+   - Password: `shivit721`
 
 ## Deployment Guide
 
