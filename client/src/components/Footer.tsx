@@ -133,8 +133,20 @@ export default function Footer() {
         </div>
 
         <div className="border-t border-gray-800 mt-12 pt-8 text-center">
-          <p className="text-gray-500 text-sm">
+          <p className="text-gray-500 text-sm flex items-center justify-center gap-2">
             © {new Date().getFullYear()} Zyro-Visuals. All rights reserved.
+          </p>
+          <p className="text-gray-500 text-sm mt-2 flex items-center justify-center gap-2">
+            Built and deployed by 
+            <a 
+              href="https://www.linkedin.com/in/shivamrathod721" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="text-gray-400 hover:text-[#0077b5] transition-colors duration-300 inline-flex items-center"
+            >
+              <LinkedInIcon className="h-4 w-4 mr-1" />
+              Shivam Rathod
+            </a>
           </p>
         </div>
       </div>

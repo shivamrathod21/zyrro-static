@@ -35,16 +35,26 @@ Zyro Visuals is a modern, responsive portfolio website built for a gaming video 
 - **Backend**: Express.js
 - **Database**: In-memory (can be replaced with PostgreSQL)
 
-## Upcoming Features/Tasks
+## Implemented Features/Tasks
+
+- [x] Custom cursor with interactive animations 
+- [x] Portfolio filtering options with advanced filters
+- [x] Admin dashboard with content management
+- [x] SEO enhancements with meta tags and structured data
+- [x] LinkedIn social media integration
+- [x] Image loading performance optimizations
+- [x] Responsive design for all device sizes
+
+## Next Steps / Future Enhancements
 
 - [ ] Image upload functionality for portfolio items and creators
 - [ ] Video embedding from YouTube for portfolio showcases
-- [ ] User authentication improvements
-- [ ] Additional portfolio filtering options
-- [ ] Social media integration
-- [ ] Email notification system
-- [ ] Performance optimizations
-- [ ] SEO enhancements
+- [ ] User authentication improvements with JWT
+- [ ] Email notification system for booking inquiries
+- [ ] Additional animation effects
+- [ ] Internationalization support
+- [ ] Dark/light theme toggle
+- [ ] Client dashboard for project tracking
 
 ## Development Setup
 
@@ -95,6 +105,20 @@ To access the admin dashboard:
    ```bash
    npm start
    ```
+
+### Files Not Required for Deployment
+
+When deploying to production, the following files/directories can be excluded:
+
+- `.git/` - Git version control files
+- `node_modules/` - Development dependencies (will be reinstalled in production)
+- `.github/` - GitHub specific files
+- `*.log` - Log files
+- `.DS_Store` - macOS specific files
+- `attached_assets/` - Development assets and screenshots
+- `drizzle/` - Database migration files (if not using them)
+- `.env.local` or `.env.development` - Development environment variables
+- `*test*` or `*spec*` files - Testing files
 
 ### Deploying to AWS
 
