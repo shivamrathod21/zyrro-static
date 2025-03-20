@@ -1,3 +1,4 @@
+import React from "react";
 import { Switch, Route } from "wouter";
 import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
@@ -49,9 +50,15 @@ function Router() {
   return (
     <Switch>
       {routes.map(({ path, component, seo }) => (
-        <Route key={path} path={path} component={component} />
+        <Route key={path} path={path}>
+          {seo && <SEO title={seo.title} description={seo.description} />}
+          {React.createElement(component)}
+        </Route>
       ))}
-      <Route component={NotFound} />
+      <Route>
+        <SEO title="Page Not Found - Zyro Visuals" description="The page you're looking for doesn't exist." />
+        <NotFound />
+      </Route>
     </Switch>
   );
 }

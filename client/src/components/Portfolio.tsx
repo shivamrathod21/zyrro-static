@@ -2,6 +2,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { useState, useEffect } from "react";
 import { FilmIcon, GamepadIcon, TrophyIcon, ZapIcon } from "@/lib/icons";
+import { getOptimizedImageUrl, generateSrcSet, generateSizes } from "@/lib/imageOptimizer";
 
 // Extended portfolio items with more metadata and examples
 const portfolioItems = [
@@ -305,10 +306,12 @@ export default function Portfolio() {
                 >
                   <div className="aspect-video bg-[#222222] relative overflow-hidden">
                     <img 
-                      src={item.imageSrc}
+                      src={getOptimizedImageUrl(item.imageSrc, 800, 85)}
                       alt={`${item.title} Thumbnail`} 
                       className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                       loading="lazy"
+                      srcSet={generateSrcSet(item.imageSrc)}
+                      sizes={generateSizes()}
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent opacity-70"></div>
                     <div className="absolute top-3 right-3 flex gap-2">
