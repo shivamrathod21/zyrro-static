@@ -147,8 +147,7 @@ export default function CustomCursor() {
             animate={{ 
               opacity: cursorVariant === 'click' ? 0.9 : 0.6,
               scale: cursorVariant === 'hover' ? 1.5 : 1,
-              backgroundColor: cursorVariant === 'hover' ? 'rgba(255, 215, 0, 0.2)' : '#FFD700',
-              borderColor: cursorVariant === 'hover' ? '#FFD700' : 'transparent',
+              backgroundColor: cursorVariant === 'hover' ? 'rgba(255, 215, 0, 0.2)' : '#FFD700'
             }}
             exit={{ opacity: 0, scale: 0 }}
             transition={{ duration: 0.15 }}
