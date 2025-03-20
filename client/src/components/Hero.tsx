@@ -8,12 +8,22 @@ export default function Hero() {
 
   // After video is loaded, show text content with a delay
   useEffect(() => {
+    // Always show text after a maximum timeout, even if video doesn't load
+    const timer = setTimeout(() => {
+      setShowText(true);
+    }, 1200);
+    
     if (videoLoaded) {
-      const timer = setTimeout(() => {
+      const videoTimer = setTimeout(() => {
         setShowText(true);
-      }, 800);
-      return () => clearTimeout(timer);
+      }, 400);
+      return () => {
+        clearTimeout(videoTimer);
+        clearTimeout(timer);
+      };
     }
+    
+    return () => clearTimeout(timer);
   }, [videoLoaded]);
 
   // Hero text animations - staggered children
@@ -36,7 +46,7 @@ export default function Hero() {
     <section className="min-h-screen relative flex items-center justify-center overflow-hidden">
       {/* Background Video */}
       <div className="absolute inset-0 z-0">
-        <div className="absolute inset-0 bg-black/50 z-10"></div>
+        <div className="absolute inset-0 bg-black/70 z-10"></div>
         <video 
           autoPlay 
           muted 
@@ -57,16 +67,50 @@ export default function Hero() {
       <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/40 to-black z-[1]"></div>
 
       {/* Hero content */}
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10 pt-32 md:pt-16">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10 pt-20 md:pt-16">
+        {/* Always visible content */}
+        <div className="text-center max-w-4xl mx-auto">
+          <h1 className="hero-title mb-6 font-['Iceland'] uppercase">
+            I KEEP THEM <span className="text-[#FFD700] inline-block">HOOKED</span>
+          </h1>
+          <p className="text-xl md:text-2xl mb-10 text-gray-300">
+            You want to hook them too?
+          </p>
+          <div className="flex flex-col sm:flex-row justify-center gap-5">
+            <motion.div
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <Button asChild className="bg-[#FFD700] text-black hover:bg-[#FFD700]/80 text-lg font-bold px-8 py-6 shadow-lg shadow-[#FFD700]/20">
+                <a href="#book" className="inline-flex items-center">
+                  Book Now
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                  </svg>
+                </a>
+              </Button>
+            </motion.div>
+            <motion.div
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <Button asChild variant="outline" className="border-white hover:bg-white/10 text-lg font-medium px-8 py-6">
+                <a href="#portfolio">View Portfolio</a>
+              </Button>
+            </motion.div>
+          </div>
+        </div>
+
+        {/* Animated content with fancy effects */}
         <motion.div 
-          className="text-center max-w-4xl mx-auto"
+          className="text-center max-w-4xl mx-auto absolute inset-0 z-[-1] opacity-0"
           initial="hidden"
           animate={showText ? "show" : "hidden"}
           variants={container}
         >
           <motion.div variants={item}>
             <motion.h1 
-              className="text-5xl md:text-7xl font-bold mb-6 tracking-tight"
+              className="hero-title mb-6 font-['Iceland'] uppercase"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
             >
@@ -84,38 +128,6 @@ export default function Hero() {
                 HOOKED
               </motion.span>
             </motion.h1>
-          </motion.div>
-          <motion.p 
-            className="text-xl md:text-3xl mb-10 text-gray-300"
-            variants={item}
-          >
-            You want to hook them too?
-          </motion.p>
-          <motion.div 
-            className="flex flex-col sm:flex-row justify-center gap-5"
-            variants={item}
-          >
-            <motion.div
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              <Button asChild className="bg-[#FFD700] text-black hover:bg-[#FFD700]/80 text-lg font-bold px-8 py-6">
-                <a href="#book" className="inline-flex items-center">
-                  Book Now
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                  </svg>
-                </a>
-              </Button>
-            </motion.div>
-            <motion.div
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              <Button asChild variant="outline" className="border-white hover:bg-white/10 text-lg font-medium px-8 py-6">
-                <a href="#portfolio">View Portfolio</a>
-              </Button>
-            </motion.div>
           </motion.div>
         </motion.div>
       </div>

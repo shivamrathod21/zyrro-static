@@ -1,127 +1,204 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { StarIcon } from "@/lib/icons";
 
+// More testimonials with subscriber counts and avatars
 const testimonials = [
   {
-    quote: "Zyro-Visuals took my gaming channel to another level. Their edits are professional, engaging, and perfectly capture the excitement of my gameplay. Fast turnaround too!",
-    author: "GamerQueen",
-    role: "Minecraft Creator, 1.2M subscribers",
-    avatar: "https://randomuser.me/api/portraits/women/32.jpg",
+    quote: "The quality of editing is high!",
+    author: "RazorFishGaming",
+    role: "1.25M subscribers",
+    avatar: "https://randomuser.me/api/portraits/men/32.jpg", 
     rating: 5
   },
   {
-    quote: "I've tried many editors before, but none have delivered the quality that Zyro-Visuals consistently provides. My viewers always comment on how well-edited my videos are.",
-    author: "FPSMaster",
-    role: "FPS Streamer, 850K subscribers",
+    quote: "Best graphics ever! And a great person to work with!",
+    author: "DiamondPlays",
+    role: "505K subscribers",
     avatar: "https://randomuser.me/api/portraits/men/22.jpg",
     rating: 5
   },
   {
-    quote: "The team at Zyro-Visuals understands gaming content. They know exactly how to highlight the most exciting moments and create videos that keep viewers engaged.",
-    author: "RPGLegend",
-    role: "RPG Content Creator, 1.5M subscribers",
+    quote: "Fast turnaround and meets all deadlines!",
+    author: "RFG",
+    role: "434K subscribers",
     avatar: "https://randomuser.me/api/portraits/women/29.jpg",
+    rating: 5
+  },
+  {
+    quote: "Amazing storytelling and exceptional editing skills!",
+    author: "JayWayyGaming",
+    role: "334K subscribers",
+    avatar: "https://randomuser.me/api/portraits/women/28.jpg",
+    rating: 5
+  },
+  {
+    quote: "Loved the intro! Looking forward to more collaborations.",
+    author: "ClayK",
+    role: "97K subscribers",
+    avatar: "https://randomuser.me/api/portraits/men/23.jpg",
     rating: 5
   }
 ];
 
 export default function Testimonials() {
   const [activeIndex, setActiveIndex] = useState(0);
+  const [autoplay, setAutoplay] = useState(true);
+  const [isDragging, setIsDragging] = useState(false);
+  const [startX, setStartX] = useState(0);
+  const [scrollLeft, setScrollLeft] = useState(0);
+  const sliderRef = useRef<HTMLDivElement>(null);
 
-  const nextTestimonial = () => {
-    setActiveIndex((prevIndex) => (prevIndex + 1) % testimonials.length);
+  // Autoplay functionality
+  useEffect(() => {
+    if (!autoplay) return;
+    
+    const interval = setInterval(() => {
+      setActiveIndex((prev) => (prev + 1) % testimonials.length);
+      scrollToTestimonial((activeIndex + 1) % testimonials.length);
+    }, 4000);
+    
+    return () => clearInterval(interval);
+  }, [activeIndex, autoplay]);
+
+  const scrollToTestimonial = (index: number) => {
+    if (!sliderRef.current) return;
+    
+    const slideWidth = sliderRef.current.scrollWidth / testimonials.length;
+    sliderRef.current.scrollTo({
+      left: slideWidth * index,
+      behavior: 'smooth'
+    });
   };
 
-  const prevTestimonial = () => {
-    setActiveIndex((prevIndex) => (prevIndex - 1 + testimonials.length) % testimonials.length);
+  const handleMouseDown = (e: React.MouseEvent) => {
+    if (!sliderRef.current) return;
+    
+    setIsDragging(true);
+    setAutoplay(false);
+    setStartX(e.pageX - sliderRef.current.offsetLeft);
+    setScrollLeft(sliderRef.current.scrollLeft);
+  };
+
+  const handleMouseUp = () => {
+    setIsDragging(false);
+    setAutoplay(true);
+    
+    // Find the closest testimonial based on scroll position
+    if (sliderRef.current) {
+      const slideWidth = sliderRef.current.scrollWidth / testimonials.length;
+      const index = Math.round(sliderRef.current.scrollLeft / slideWidth);
+      setActiveIndex(index);
+      scrollToTestimonial(index);
+    }
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!isDragging || !sliderRef.current) return;
+    
+    e.preventDefault();
+    const x = e.pageX - sliderRef.current.offsetLeft;
+    const walk = (x - startX) * 2; // Drag sensitivity
+    sliderRef.current.scrollLeft = scrollLeft - walk;
   };
 
   return (
-    <section id="testimonials" className="py-16 md:py-24">
+    <section id="testimonials" className="py-12 md:py-16 bg-black/50">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div 
-          className="text-center mb-16"
+          className="text-center mb-8"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
           viewport={{ once: true }}
         >
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">
-            What Creators <span className="text-[#FFD700]">Say About Us</span>
+          <h2 className="text-3xl md:text-4xl font-bold mb-4 font-['Iceland'] tracking-wider">
+            Trusted by <span className="text-[#FFD700]">Top Gaming Creators</span>
           </h2>
-          <p className="text-gray-400 max-w-3xl mx-auto">
-            Don't just take our word for it - hear from our satisfied clients
+          <p className="text-gray-400 max-w-2xl mx-auto text-sm mb-8">
+            Delivering high-quality edits for gaming content creators worldwide
           </p>
         </motion.div>
 
-        <div className="relative">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={activeIndex}
-              initial={{ opacity: 0, x: 50 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -50 }}
-              transition={{ duration: 0.5 }}
-              className="p-6 md:p-8 bg-[#111111] rounded-xl"
-            >
-              <div className="flex flex-col md:flex-row gap-6 items-center">
-                <div className="md:w-1/4 flex justify-center">
-                  <img 
-                    src={testimonials[activeIndex].avatar}
-                    alt={testimonials[activeIndex].author} 
-                    className="w-24 h-24 rounded-full border-2 border-[#FFD700]"
-                  />
-                </div>
-                <div className="md:w-3/4">
-                  <div className="flex mb-4">
-                    {[...Array(testimonials[activeIndex].rating)].map((_, i) => (
-                      <StarIcon key={i} className="text-[#FFD700]" />
+        {/* Horizontal scrollable testimonials */}
+        <div 
+          className="relative overflow-hidden"
+          onMouseLeave={handleMouseUp}
+        >
+          <div 
+            ref={sliderRef}
+            className="flex overflow-x-auto pb-6 scrollbar-hide snap-x snap-mandatory"
+            style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+            onMouseDown={handleMouseDown}
+            onMouseUp={handleMouseUp}
+            onMouseMove={handleMouseMove}
+          >
+            {testimonials.map((testimonial, idx) => (
+              <div 
+                key={idx}
+                className="min-w-[300px] md:min-w-[350px] p-4 snap-start snap-always mr-4 flex-shrink-0"
+              >
+                <motion.div 
+                  className="bg-[#111111] rounded-lg p-6 h-full flex flex-col shadow-lg border border-gray-800"
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3, delay: idx * 0.1 }}
+                  whileHover={{ y: -5, boxShadow: '0 10px 25px -5px rgba(255, 215, 0, 0.1)' }}
+                >
+                  <div className="flex items-center mb-4">
+                    <img 
+                      src={testimonial.avatar}
+                      alt={testimonial.author} 
+                      className="w-12 h-12 rounded-full border-2 border-[#FFD700] mr-4"
+                    />
+                    <div>
+                      <h3 className="font-semibold text-white text-md">{testimonial.author}</h3>
+                      <p className="text-gray-400 text-xs">{testimonial.role}</p>
+                    </div>
+                  </div>
+                  
+                  <div className="flex mb-3">
+                    {[...Array(testimonial.rating)].map((_, i) => (
+                      <StarIcon key={i} className="text-[#FFD700] w-4 h-4" />
                     ))}
                   </div>
-                  <blockquote className="text-gray-300 italic text-lg mb-4">
-                    "{testimonials[activeIndex].quote}"
+                  
+                  <blockquote className="text-gray-300 text-sm italic flex-grow">
+                    "{testimonial.quote}"
                   </blockquote>
-                  <div>
-                    <p className="font-semibold text-white">{testimonials[activeIndex].author}</p>
-                    <p className="text-gray-400 text-sm">{testimonials[activeIndex].role}</p>
-                  </div>
-                </div>
+                </motion.div>
               </div>
-            </motion.div>
-          </AnimatePresence>
+            ))}
+          </div>
 
-          {/* Carousel Controls */}
-          <div className="flex justify-center mt-8 gap-2">
+          {/* Dots indicator */}
+          <div className="flex justify-center mt-6 gap-2">
             {testimonials.map((_, index) => (
               <button
                 key={index}
-                onClick={() => setActiveIndex(index)}
-                className={`w-3 h-3 rounded-full ${index === activeIndex ? 'bg-[#FFD700]' : 'bg-gray-600'}`}
+                onClick={() => {
+                  setActiveIndex(index);
+                  scrollToTestimonial(index);
+                }}
+                className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                  index === activeIndex 
+                    ? 'bg-[#FFD700] w-6' 
+                    : 'bg-gray-600 hover:bg-gray-500'
+                }`}
                 aria-label={`Go to testimonial ${index + 1}`}
               />
             ))}
           </div>
 
-          {/* Navigation Arrows */}
-          <button
-            onClick={prevTestimonial}
-            className="absolute top-1/2 left-4 transform -translate-y-1/2 bg-[#FFD700] text-black w-10 h-10 rounded-full flex items-center justify-center hover:bg-opacity-80 transition-all duration-300 focus:outline-none"
-            aria-label="Previous testimonial"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+          {/* Background decorative element */}
+          <div className="absolute -bottom-10 left-1/2 transform -translate-x-1/2 w-full h-40 opacity-10 z-[-1]">
+            <svg width="100%" height="100%" viewBox="0 0 1000 100" preserveAspectRatio="none">
+              <path 
+                d="M0,0 C300,80 500,20 1000,80 L1000,100 L0,100 Z" 
+                fill="#FFD700"
+              ></path>
             </svg>
-          </button>
-          <button
-            onClick={nextTestimonial}
-            className="absolute top-1/2 right-4 transform -translate-y-1/2 bg-[#FFD700] text-black w-10 h-10 rounded-full flex items-center justify-center hover:bg-opacity-80 transition-all duration-300 focus:outline-none"
-            aria-label="Next testimonial"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-            </svg>
-          </button>
+          </div>
         </div>
       </div>
     </section>
