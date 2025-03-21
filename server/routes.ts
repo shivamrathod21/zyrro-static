@@ -36,6 +36,39 @@ const validateRequest = (schema: z.ZodType<any, any>) => {
   };
 };
 
+// Demo video content
+const demoVideos = [
+  {
+    id: 1,
+    section: 'hero',
+    title: 'Cinematic Demo Reel',
+    description: 'Professional video editing showcase',
+    videoUrl: 'https://cdn.coverr.co/videos/coverr-an-aerial-view-of-a-city-at-sunset-3654/1080p.mp4',
+    thumbnailUrl: null,
+    active: true,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString()
+  },
+  {
+    id: 2,
+    section: 'before_after',
+    title: 'Color Grading Example',
+    description: 'Before and after color correction',
+    videoUrl: 'https://cdn.coverr.co/videos/coverr-driving-through-a-city-at-night-2165/1080p.mp4',
+    thumbnailUrl: 'https://cdn.coverr.co/videos/coverr-driving-through-a-city-at-night-2165/preview.jpg',
+    active: true,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString()
+  }
+];
+
+// Demo admin credentials
+const demoAdmin = {
+  username: 'shakti',
+  password: 'shivit721',
+  isAdmin: true
+};
+
 // Authentication middleware
 const isAuthenticated = (req: Request, res: Response, next: NextFunction) => {
   if (req.session.user) {
@@ -55,20 +88,10 @@ const isAdmin = (req: Request, res: Response, next: NextFunction) => {
 };
 
 export async function registerRoutes(app: Express): Promise<Server> {
-  // Set up session middleware with memory store
-  const SessionStore = MemoryStore(session);
-  app.use(session({
-    secret: 'zyro-visuals-secret',
-    resave: false,
-    saveUninitialized: false,
-    store: new SessionStore({
-      checkPeriod: 86400000 // prune expired entries every 24h
-    }),
-    cookie: { 
-      secure: false, // set to true if using https
-      maxAge: 24 * 60 * 60 * 1000 // 24 hours
-    }
-  }));
+  // Video content endpoint
+  app.get('/api/video-content', (req, res) => {
+    res.json(demoVideos);
+  });
 
   // Add user data to session
   app.use((req, res, next) => {

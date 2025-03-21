@@ -2,6 +2,29 @@ import { pgTable, text, serial, integer, boolean, timestamp } from "drizzle-orm/
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
+// Video content management table
+export const videoContent = pgTable("video_content", {
+  id: serial("id").primaryKey(),
+  section: text("section").notNull(), // 'hero', 'portfolio', 'before_after'
+  title: text("title").notNull(),
+  description: text("description"),
+  videoUrl: text("video_url").notNull(),
+  thumbnailUrl: text("thumbnail_url"),
+  active: boolean("active").notNull().default(true),
+  createdAt: text("created_at").notNull(),
+  updatedAt: text("updated_at").notNull()
+});
+
+export const insertVideoContentSchema = createInsertSchema(videoContent).pick({
+  section: true,
+  title: true,
+  description: true,
+  videoUrl: true,
+  thumbnailUrl: true,
+  active: true
+});
+
+
 export const users = pgTable("users", {
   id: serial("id").primaryKey(),
   username: text("username").notNull().unique(),

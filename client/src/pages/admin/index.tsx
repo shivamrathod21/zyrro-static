@@ -9,6 +9,8 @@ import PortfolioManager from "../../components/admin/PortfolioManager";
 import CreatorsManager from "../../components/admin/CreatorsManager";
 import TestimonialsManager from "../../components/admin/TestimonialsManager";
 import BookingsManager from "../../components/admin/BookingsManager";
+import BlogManager from "../../components/admin/BlogManager";
+import VideoManager from "../../components/admin/VideoManager";
 
 export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState("portfolio");
@@ -70,6 +72,9 @@ export default function AdminDashboard() {
       <main className="container mx-auto py-6 px-4">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
           <TabsList className="bg-zinc-900 border-zinc-800 p-1">
+            <TabsTrigger value="videos" className="data-[state=active]:bg-yellow-500 data-[state=active]:text-black">
+              Videos
+            </TabsTrigger>
             <TabsTrigger value="portfolio" className="data-[state=active]:bg-yellow-500 data-[state=active]:text-black">
               Portfolio
             </TabsTrigger>
@@ -82,7 +87,14 @@ export default function AdminDashboard() {
             <TabsTrigger value="bookings" className="data-[state=active]:bg-yellow-500 data-[state=active]:text-black">
               Bookings
             </TabsTrigger>
+            <TabsTrigger value="blog" className="data-[state=active]:bg-yellow-500 data-[state=active]:text-black">
+              Blog
+            </TabsTrigger>
           </TabsList>
+
+          <TabsContent value="videos" className="space-y-4">
+            <VideoManager />
+          </TabsContent>
 
           <TabsContent value="portfolio" className="space-y-4">
             <PortfolioManager />
@@ -98,6 +110,10 @@ export default function AdminDashboard() {
 
           <TabsContent value="bookings" className="space-y-4">
             <BookingsManager />
+          </TabsContent>
+
+          <TabsContent value="blog" className="space-y-4">
+            <BlogManager />
           </TabsContent>
         </Tabs>
       </main>

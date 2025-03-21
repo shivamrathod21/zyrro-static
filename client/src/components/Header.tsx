@@ -68,14 +68,15 @@ export default function Header() {
                 className="h-8 mr-3"
               />
               <span className="text-white text-xl font-bold tracking-wider">
-                <span className="font-['Iceland'] tracking-wider">Zyro-</span>
+                <span className="font-['Iceland'] tracking-[0.2em] text-2xl hover:text-[#FFD700] transition-all duration-300">Zyro-</span>
                 <motion.span 
-                  className="text-[#FFD700] font-['Iceland'] tracking-wider"
+                  className="text-[#FFD700] font-['Iceland'] tracking-[0.2em] text-2xl"
                   animate={{ 
-                    textShadow: ['0 0 0px #FFD700', '0 0 10px #FFD700', '0 0 0px #FFD700'] 
+                    textShadow: ['0 0 0px #FFD700', '0 0 15px #FFD700', '0 0 0px #FFD700'],
+                    filter: ['drop-shadow(0 0 0px #FFD700)', 'drop-shadow(0 0 8px #FFD700)', 'drop-shadow(0 0 0px #FFD700)']
                   }}
                   transition={{ 
-                    duration: 1.5, 
+                    duration: 2, 
                     repeat: Infinity, 
                     repeatType: "reverse" 
                   }}

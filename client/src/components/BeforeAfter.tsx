@@ -1,23 +1,24 @@
 import { useState, useRef, useEffect } from "react";
 import { ReactCompareSlider, ReactCompareSliderImage, ReactCompareSliderHandle } from "react-compare-slider";
 import { motion } from "framer-motion";
-
-const sliderComparisons = [
-  {
-    label: "Gaming Montage",
-    beforeSrc: "https://images.unsplash.com/photo-1547394765-185e1e68f34e?w=800&auto=format&fit=crop&q=60",
-    afterSrc: "https://images.unsplash.com/photo-1560419015-7c427e8ae5ba?w=800&auto=format&fit=crop&q=60",
-  },
-  {
-    label: "Stream Highlights",
-    beforeSrc: "https://images.unsplash.com/photo-1593305841991-05c297ba4575?w=800&auto=format&fit=crop&q=60",
-    afterSrc: "https://images.unsplash.com/photo-1552820728-8b83bb6b773f?w=800&auto=format&fit=crop&q=60",
-  }
-];
+import { useQuery } from "@tanstack/react-query";
+import { apiRequest } from "@/lib/queryClient";
 
 export default function BeforeAfter() {
   const [width, setWidth] = useState(0);
   const sliderContainerRef = useRef<HTMLDivElement>(null);
+  
+  // Fetch before/after video content
+  const { data: beforeAfterVideos = [] } = useQuery({
+    queryKey: ["/api/video-content", "before_after"],
+    queryFn: async () => {
+      const videos = await apiRequest({
+        url: "/api/video-content",
+        method: "GET",
+      });
+      return videos.filter((v: any) => v.section === "before_after" && v.active);
+    },
+  });
   
   useEffect(() => {
     if (sliderContainerRef.current) {
@@ -56,9 +57,9 @@ export default function BeforeAfter() {
           ref={sliderContainerRef} 
           className="grid grid-cols-1 md:grid-cols-2 gap-8"
         >
-          {sliderComparisons.map((comparison, index) => (
+          {beforeAfterVideos.map((comparison: any, index: number) => (
             <motion.div 
-              key={index}
+              key={comparison.id}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: index * 0.2 }}
@@ -69,14 +70,14 @@ export default function BeforeAfter() {
                 <ReactCompareSlider
                   itemOne={
                     <ReactCompareSliderImage
-                      src={comparison.beforeSrc}
+                      src={comparison.thumbnailUrl || comparison.videoUrl}
                       alt="Before Edit"
                       style={{ filter: "brightness(0.7)" }}
                     />
                   }
                   itemTwo={
                     <ReactCompareSliderImage
-                      src={comparison.afterSrc}
+                      src={comparison.videoUrl}
                       alt="After Edit"
                       style={{ filter: "brightness(1)" }}
                     />
@@ -99,10 +100,10 @@ export default function BeforeAfter() {
                   }}
                 />
                 <div className="absolute bottom-4 left-4 bg-black bg-opacity-70 px-3 py-1 rounded-md">
-                  <span className="text-sm font-medium">{comparison.label}</span>
+                  <span className="text-sm font-medium">{comparison.title}</span>
                 </div>
               </div>
-              <p className="text-center mt-2 text-sm text-gray-400">Drag slider to compare before and after edits</p>
+              <p className="text-center mt-2 text-sm text-gray-400">{comparison.description || "Drag slider to compare before and after edits"}</p>
             </motion.div>
           ))}
         </div>
