@@ -54,8 +54,21 @@ const demoVideos = [
     section: 'before_after',
     title: 'Color Grading Example',
     description: 'Before and after color correction',
-    videoUrl: 'https://cdn.coverr.co/videos/coverr-driving-through-a-city-at-night-2165/1080p.mp4',
+    beforeVideoUrl: 'https://cdn.coverr.co/videos/coverr-driving-through-a-city-at-night-2165/1080p.mp4',
+    afterVideoUrl: 'https://cdn.coverr.co/videos/coverr-driving-through-a-city-at-night-2165/1080p.mp4',
     thumbnailUrl: 'https://cdn.coverr.co/videos/coverr-driving-through-a-city-at-night-2165/preview.jpg',
+    active: true,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString()
+  },
+  {
+    id: 3,
+    section: 'before_after',
+    title: 'Cinematic Color Enhancement',
+    description: 'See the dramatic transformation with our color grading',
+    beforeVideoUrl: 'https://cdn.coverr.co/videos/coverr-an-aerial-view-of-a-city-4778/1080p.mp4',
+    afterVideoUrl: 'https://cdn.coverr.co/videos/coverr-an-aerial-view-of-a-city-4778/1080p.mp4',
+    thumbnailUrl: 'https://cdn.coverr.co/videos/coverr-an-aerial-view-of-a-city-4778/preview.jpg',
     active: true,
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString()

@@ -1,8 +1,17 @@
 import { useState, useEffect } from "react";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
-import { TwitterIcon, DiscordIcon, YoutubeIcon } from "@/lib/icons";
+import { TwitterIcon, DiscordIcon } from "@/lib/icons";
+import { Mail } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import {
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+} from "@/components/ui/navigation-menu";
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -88,49 +97,50 @@ export default function Header() {
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center space-x-6">
-            <div className="space-x-6">
-              <motion.a
-                href="/"
-                onClick={(e) => {
-                  e.preventDefault();
-                  window.scrollTo({ top: 0, behavior: 'smooth' });
-                }}
-                className="text-white hover:text-[#FFD700] font-medium transition-colors duration-300 cursor-pointer font-['Iceland'] tracking-wider"
-                whileHover={{ y: -2, textShadow: "0 0 8px rgba(255, 215, 0, 0.5)" }}
-              >
-                Home
-              </motion.a>
-              <motion.a
-                href="#portfolio"
-                onClick={scrollToSection('portfolio')}
-                className="text-white hover:text-[#FFD700] font-medium transition-colors duration-300 cursor-pointer font-['Iceland'] tracking-wider"
-                whileHover={{ y: -2, textShadow: "0 0 8px rgba(255, 215, 0, 0.5)" }}
-              >
-                Portfolio
-              </motion.a>
-              <motion.a
-                href="#creators"
-                onClick={scrollToSection('creators')}
-                className="text-white hover:text-[#FFD700] font-medium transition-colors duration-300 cursor-pointer font-['Iceland'] tracking-wider"
-                whileHover={{ y: -2, textShadow: "0 0 8px rgba(255, 215, 0, 0.5)" }}
-              >
-                Creators
-              </motion.a>
-              <motion.a
-                href="#testimonials"
-                onClick={scrollToSection('testimonials')}
-                className="text-white hover:text-[#FFD700] font-medium transition-colors duration-300 cursor-pointer font-['Iceland'] tracking-wider"
-                whileHover={{ y: -2, textShadow: "0 0 8px rgba(255, 215, 0, 0.5)" }}
-              >
-                Testimonials
-              </motion.a>
-            </div>
+          <NavigationMenu className="hidden md:flex">
+            <NavigationMenuList className="space-x-2">
+              <NavigationMenuItem>
+                <NavigationMenuLink
+                  className="text-white hover:text-[#FFD700] font-medium transition-colors duration-300 cursor-pointer font-['Iceland'] tracking-wider px-4 py-2 inline-block"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                  }}
+                >
+                  Home
+                </NavigationMenuLink>
+              </NavigationMenuItem>
+              <NavigationMenuItem>
+                <NavigationMenuLink
+                  className="text-white hover:text-[#FFD700] font-medium transition-colors duration-300 cursor-pointer font-['Iceland'] tracking-wider px-4 py-2 inline-block"
+                  onClick={scrollToSection('portfolio')}
+                >
+                  Portfolio
+                </NavigationMenuLink>
+              </NavigationMenuItem>
+              <NavigationMenuItem>
+                <NavigationMenuLink
+                  className="text-white hover:text-[#FFD700] font-medium transition-colors duration-300 cursor-pointer font-['Iceland'] tracking-wider px-4 py-2 inline-block"
+                  onClick={scrollToSection('creators')}
+                >
+                  Creators
+                </NavigationMenuLink>
+              </NavigationMenuItem>
+              <NavigationMenuItem>
+                <NavigationMenuLink
+                  className="text-white hover:text-[#FFD700] font-medium transition-colors duration-300 cursor-pointer font-['Iceland'] tracking-wider px-4 py-2 inline-block"
+                  onClick={scrollToSection('testimonials')}
+                >
+                  Testimonials
+                </NavigationMenuLink>
+              </NavigationMenuItem>
+            </NavigationMenuList>
+          </NavigationMenu>
 
             {/* Social Media Icons */}
             <div className="flex items-center space-x-4">
               <motion.a 
-                href="https://twitter.com" 
+                href="https://x.com/ZyroVisual" 
                 target="_blank" 
                 rel="noopener noreferrer" 
                 className="text-white hover:text-[#FFD700] transition-colors duration-300"
@@ -139,7 +149,7 @@ export default function Header() {
                 <TwitterIcon />
               </motion.a>
               <motion.a 
-                href="https://discord.com" 
+                href="https://discord.com/users/863354644926693396" 
                 target="_blank" 
                 rel="noopener noreferrer" 
                 className="text-white hover:text-[#FFD700] transition-colors duration-300"
@@ -148,13 +158,13 @@ export default function Header() {
                 <DiscordIcon />
               </motion.a>
               <motion.a 
-                href="https://youtube.com" 
+                href="mailto:zyrovisual158@gmail.com" 
                 target="_blank" 
                 rel="noopener noreferrer" 
                 className="text-white hover:text-[#FFD700] transition-colors duration-300"
                 whileHover={{ y: -2, scale: 1.2, filter: "drop-shadow(0 0 8px rgba(255, 215, 0, 0.5))" }}
               >
-                <YoutubeIcon />
+                <Mail className="w-5 h-5" />
               </motion.a>
             </div>
 
@@ -175,7 +185,6 @@ export default function Header() {
                 </a>
               </Button>
             </motion.div>
-          </nav>
 
           {/* Mobile Menu Button */}
           <motion.button

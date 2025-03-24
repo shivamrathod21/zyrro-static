@@ -65,11 +65,30 @@ export default function Hero() {
           muted 
           loop 
           playsInline
+          preload="auto"
           className="absolute top-0 left-0 w-full h-full object-cover"
-          onLoadedData={() => setVideoLoaded(true)}
+          onLoadedData={() => {
+            console.log("Video loaded successfully");
+            setVideoLoaded(true);
+          }}
+          poster={heroVideo?.thumbnailUrl}
+          style={{ opacity: videoLoaded ? 1 : 0 }}
+          onError={(e) => {
+            console.error("Video loading error:", e);
+            // Attempt to reload video on error
+            const target = e.target;
+            if (target instanceof HTMLVideoElement) {
+              try {
+                target.src = target.src; // Reset source to trigger reload
+                target.load(); // Attempt to reload
+              } catch (error) {
+                console.error("Failed to reload video:", error);
+              }
+            }
+          }}
         >
           <source 
-            src={heroVideo?.videoUrl || "https://assets.mixkit.co/videos/preview/mixkit-set-of-screens-showing-virtual-data-94834-large.mp4"}
+            src={heroVideo?.videoUrl || "https://res.cloudinary.com/do8nyydiy/video/upload/samples/dance-2.mp4"}
             type="video/mp4" 
           />
           Your browser does not support the video tag.

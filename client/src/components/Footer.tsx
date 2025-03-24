@@ -1,14 +1,13 @@
 import { Link } from "wouter";
+import { motion } from "framer-motion";
 import {
   TwitterIcon,
-  YoutubeIcon,
   DiscordIcon,
-  InstagramIcon,
   EnvelopeIcon,
   ClockIcon
 } from "@/lib/icons";
 
-// LinkedIn Icon Component
+// LinkedIn Icon Component (used in credit section)
 const LinkedInIcon = (props: React.SVGProps<SVGSVGElement>) => (
   <svg 
     xmlns="http://www.w3.org/2000/svg" 
@@ -25,57 +24,45 @@ export default function Footer() {
     <footer className="py-12 bg-[#222222] border-t border-gray-800">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-          {/* Logo & Description */}
+          {/* Branding - Logo & Tagline (Kept as per your request) */}
           <div className="md:col-span-1">
-            <Link href="/" className="flex items-center mb-4">
-              <img 
-                src="https://raw.githubusercontent.com/shivamrathod21/ZYRO_VISUAL/main/images/zyro-visuals.png" 
-                alt="Zyro-Visuals Logo" 
-                className="h-8 mr-3"
-              />
-              <span className="text-white text-xl font-bold">
-                <span>Zyro-</span><span className="text-[#FFD700]">Visuals</span>
-              </span>
-            </Link>
-            <p className="text-gray-400 text-sm mb-4">
-              Premium video editing services for gaming content creators who want to stand out.
-            </p>
-            <div className="flex space-x-4">
-              <a href="https://www.linkedin.com/in/shivamrathod721" target="_blank" rel="noopener noreferrer" 
-                className="text-gray-400 hover:text-[#0077b5] transition-colors duration-300"
-                aria-label="LinkedIn Profile"
-                title="Connect with us on LinkedIn"
-              >
-                <LinkedInIcon className="h-5 w-5" />
-              </a>
-              <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" 
-                className="text-gray-400 hover:text-[#1DA1F2] transition-colors duration-300"
+            <img src="/logo.png" alt="Zyro-Visuals Logo" className="h-12" />
+            <p className="text-gray-400 mt-2">Bringing your visuals to life.</p>
+            {/* Social Icons */}
+            <div className="flex space-x-4 mt-4">
+              <motion.a 
+                href="https://x.com/ZyroVisual" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="text-gray-400 hover:text-[#FFD700] transition-colors duration-300"
+                whileHover={{ y: -2, scale: 1.2, filter: "drop-shadow(0 0 8px rgba(255, 215, 0, 0.5))" }}
                 aria-label="Twitter Profile"
                 title="Follow us on Twitter"
               >
                 <TwitterIcon className="h-5 w-5" />
-              </a>
-              <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" 
-                className="text-gray-400 hover:text-[#FF0000] transition-colors duration-300"
-                aria-label="YouTube Channel"
-                title="Subscribe to our YouTube channel"
-              >
-                <YoutubeIcon className="h-5 w-5" />
-              </a>
-              <a href="https://discord.com" target="_blank" rel="noopener noreferrer" 
-                className="text-gray-400 hover:text-[#5865F2] transition-colors duration-300"
+              </motion.a>
+              <motion.a 
+                href="https://discord.com/users/863354644926693396" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="text-gray-400 hover:text-[#FFD700] transition-colors duration-300"
+                whileHover={{ y: -2, scale: 1.2, filter: "drop-shadow(0 0 8px rgba(255, 215, 0, 0.5))" }}
                 aria-label="Discord Server"
                 title="Join our Discord server"
               >
                 <DiscordIcon className="h-5 w-5" />
-              </a>
-              <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" 
-                className="text-gray-400 hover:text-[#E1306C] transition-colors duration-300"
-                aria-label="Instagram Profile"
-                title="Follow us on Instagram"
+              </motion.a>
+              <motion.a 
+                href="mailto:zyrovisual158@gmail.com" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="text-gray-400 hover:text-[#FFD700] transition-colors duration-300"
+                whileHover={{ y: -2, scale: 1.2, filter: "drop-shadow(0 0 8px rgba(255, 215, 0, 0.5))" }}
+                aria-label="Email"
+                title="Send us an email"
               >
-                <InstagramIcon className="h-5 w-5" />
-              </a>
+                <EnvelopeIcon className="h-5 w-5" />
+              </motion.a>
             </div>
           </div>
 
@@ -83,11 +70,31 @@ export default function Footer() {
           <div className="md:col-span-1">
             <h3 className="text-white font-semibold text-lg mb-4">Quick Links</h3>
             <ul className="space-y-2">
-              <li><Link href="/" className="text-gray-400 hover:text-[#FFD700] transition-colors duration-300">Home</Link></li>
-              <li><a href="#services" className="text-gray-400 hover:text-[#FFD700] transition-colors duration-300">Services</a></li>
-              <li><a href="#portfolio" className="text-gray-400 hover:text-[#FFD700] transition-colors duration-300">Portfolio</a></li>
-              <li><a href="#testimonials" className="text-gray-400 hover:text-[#FFD700] transition-colors duration-300">Testimonials</a></li>
-              <li><a href="#book" className="text-gray-400 hover:text-[#FFD700] transition-colors duration-300">Book Now</a></li>
+              <li>
+                <Link href="/" className="text-gray-400 hover:text-[#FFD700] transition-colors duration-300">
+                  Home
+                </Link>
+              </li>
+              <li>
+                <a href="#services" className="text-gray-400 hover:text-[#FFD700] transition-colors duration-300">
+                  Services
+                </a>
+              </li>
+              <li>
+                <a href="#portfolio" className="text-gray-400 hover:text-[#FFD700] transition-colors duration-300">
+                  Portfolio
+                </a>
+              </li>
+              <li>
+                <a href="#testimonials" className="text-gray-400 hover:text-[#FFD700] transition-colors duration-300">
+                  Testimonials
+                </a>
+              </li>
+              <li>
+                <a href="#book" className="text-gray-400 hover:text-[#FFD700] transition-colors duration-300">
+                  Book Now
+                </a>
+              </li>
             </ul>
           </div>
 
@@ -95,11 +102,31 @@ export default function Footer() {
           <div className="md:col-span-1">
             <h3 className="text-white font-semibold text-lg mb-4">Services</h3>
             <ul className="space-y-2">
-              <li><a href="#services" className="text-gray-400 hover:text-[#FFD700] transition-colors duration-300">Gaming Highlights</a></li>
-              <li><a href="#services" className="text-gray-400 hover:text-[#FFD700] transition-colors duration-300">Stream Compilations</a></li>
-              <li><a href="#services" className="text-gray-400 hover:text-[#FFD700] transition-colors duration-300">Montage Editing</a></li>
-              <li><a href="#services" className="text-gray-400 hover:text-[#FFD700] transition-colors duration-300">Visual Effects</a></li>
-              <li><a href="#services" className="text-gray-400 hover:text-[#FFD700] transition-colors duration-300">Gaming Trailers</a></li>
+              <li>
+                <a href="#services" className="text-gray-400 hover:text-[#FFD700] transition-colors duration-300">
+                  Gaming Highlights
+                </a>
+              </li>
+              <li>
+                <a href="#services" className="text-gray-400 hover:text-[#FFD700] transition-colors duration-300">
+                  Stream Compilations
+                </a>
+              </li>
+              <li>
+                <a href="#services" className="text-gray-400 hover:text-[#FFD700] transition-colors duration-300">
+                  Montage Editing
+                </a>
+              </li>
+              <li>
+                <a href="#services" className="text-gray-400 hover:text-[#FFD700] transition-colors duration-300">
+                  Visual Effects
+                </a>
+              </li>
+              <li>
+                <a href="#services" className="text-gray-400 hover:text-[#FFD700] transition-colors duration-300">
+                  Gaming Trailers
+                </a>
+              </li>
             </ul>
           </div>
 
@@ -109,13 +136,12 @@ export default function Footer() {
             <ul className="space-y-3">
               <li className="flex items-start">
                 <EnvelopeIcon className="text-[#FFD700] mt-1 mr-3 h-5 w-5 flex-shrink-0" />
-                <span className="text-gray-400">contact@zyro-visuals.com</span>
+                <span className="text-gray-400">zyrovisual158@gmail.com</span>
               </li>
               <li className="flex items-start">
                 <DiscordIcon className="text-[#FFD700] mt-1 mr-3 h-5 w-5 flex-shrink-0" />
-                <span className="text-gray-400">discord.gg/zyrovisuals</span>
+                <span className="text-gray-400">discord.com/users/863354644926693396</span>
               </li>
-              {/* LinkedIn placeholder for Zyro Visuals */}
               <li className="flex items-start">
                 <ClockIcon className="text-[#FFD700] mt-1 mr-3 h-5 w-5 flex-shrink-0" />
                 <span className="text-gray-400">Response Time: Within 24 hours</span>
@@ -125,18 +151,15 @@ export default function Footer() {
         </div>
 
         <div className="border-t border-gray-800 mt-12 pt-8 text-center">
-          <p className="text-gray-500 text-sm flex items-center justify-center gap-2">
-            © {new Date().getFullYear()} Zyro-Visuals. All rights reserved.
-          </p>
-          <p className="text-gray-500 text-sm mt-2 flex items-center justify-center gap-2">
-            Built and deployed by 
+          <p className="text-gray-500 text-sm">
+            Built and deployed by{" "}
             <a 
               href="https://www.linkedin.com/in/shivamrathod721" 
               target="_blank" 
               rel="noopener noreferrer" 
-              className="text-gray-400 hover:text-[#0077b5] transition-colors duration-300 inline-flex items-center"
+              className="text-gray-400 hover:text-[#0077b5] inline-flex items-center gap-1"
             >
-              <LinkedInIcon className="h-4 w-4 mr-1" />
+              <LinkedInIcon className="h-4 w-4" />
               Shivam Rathod
             </a>
           </p>

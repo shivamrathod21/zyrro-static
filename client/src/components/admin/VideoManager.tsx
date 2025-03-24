@@ -23,12 +23,33 @@ const formSchema = z.object({
   description: z.string().optional(),
   videoUrl: z.string().url({
     message: "Please enter a valid URL for the video.",
-  }),
+  }).optional(),
+  beforeVideoUrl: z.string().url({
+    message: "Please enter a valid URL for the before video.",
+  }).optional(),
+  afterVideoUrl: z.string().url({
+    message: "Please enter a valid URL for the after video.",
+  }).optional(),
   thumbnailUrl: z.string().url({
     message: "Please enter a valid URL for the thumbnail.",
   }).optional(),
   active: z.boolean().default(true)
 });
+
+// Conditional schema validation based on section
+const validateFormData = (data: any) => {
+  if (data.section === "before_after") {
+    if (!data.beforeVideoUrl) {
+      throw new Error("Before Video URL is required for Before & After section");
+    }
+    if (!data.afterVideoUrl) {
+      throw new Error("After Video URL is required for Before & After section");
+    }
+  } else if (!data.videoUrl) {
+    throw new Error("Video URL is required for this section");
+  }
+  return data;
+}
 
 type FormValues = z.infer<typeof formSchema>;
 
@@ -45,6 +66,8 @@ export default function VideoManager() {
       title: "",
       description: "",
       videoUrl: "",
+      beforeVideoUrl: "",
+      afterVideoUrl: "",
       thumbnailUrl: "",
       active: true
     },
@@ -138,10 +161,21 @@ export default function VideoManager() {
   });
 
   const onSubmit = (data: FormValues) => {
-    if (isEditing && editingId) {
-      updateMutation.mutate({ id: editingId, data });
-    } else {
-      createMutation.mutate(data);
+    try {
+      // Validate form data based on section
+      validateFormData(data);
+      
+      if (isEditing && editingId) {
+        updateMutation.mutate({ id: editingId, data });
+      } else {
+        createMutation.mutate(data);
+      }
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Validation Error",
+        description: error instanceof Error ? error.message : "Please check your form inputs",
+      });
     }
   };
 
@@ -152,7 +186,9 @@ export default function VideoManager() {
       section: item.section,
       title: item.title,
       description: item.description || "",
-      videoUrl: item.videoUrl,
+      videoUrl: item.videoUrl || "",
+      beforeVideoUrl: item.beforeVideoUrl || "",
+      afterVideoUrl: item.afterVideoUrl || "",
       thumbnailUrl: item.thumbnailUrl || "",
       active: item.active
     });
@@ -242,19 +278,50 @@ export default function VideoManager() {
                 )}
               />
 
-              <FormField
-                control={form.control}
-                name="videoUrl"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Video URL</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Enter video URL" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+              {form.watch('section') !== 'before_after' ? (
+                <FormField
+                  control={form.control}
+                  name="videoUrl"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Video URL</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Enter video URL" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              ) : (
+                <>
+                  <FormField
+                    control={form.control}
+                    name="beforeVideoUrl"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Before Video URL</FormLabel>
+                        <FormControl>
+                          <Input placeholder="Enter before video URL" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="afterVideoUrl"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>After Video URL</FormLabel>
+                        <FormControl>
+                          <Input placeholder="Enter after video URL" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </>
+              )}
 
               <FormField
                 control={form.control}

@@ -5,38 +5,24 @@ import { StarIcon } from "@/lib/icons";
 // More testimonials with subscriber counts and avatars
 const testimonials = [
   {
-    quote: "The quality of editing is high!",
-    author: "RazorFishGaming",
-    role: "1.25M subscribers",
-    avatar: "https://randomuser.me/api/portraits/men/32.jpg", 
+    quote: "bro...that edit is incredible! you have no idea how wonderful it is to work with you!!",
+    author: "Valekis",
+    role: "281K subscribers",
+    avatar: "https://yt3.googleusercontent.com/ytc/APkrFKbgqvyHEH2pQVT9UPw2Kj_GF5UQZHhbvS_GYSqJ=s176-c-k-c0x00ffffff-no-rj", 
     rating: 5
   },
   {
-    quote: "Best graphics ever! And a great person to work with!",
-    author: "DiamondPlays",
-    role: "505K subscribers",
-    avatar: "https://randomuser.me/api/portraits/men/22.jpg",
+    quote: "The animations are really good, pacing is perfect. its amazing!",
+    author: "AshleyBunni",
+    role: "348K subscribers",
+    avatar: "https://yt3.googleusercontent.com/ytc/APkrFKbXQpnFNEGAXr8YxZJFLSKdLQZt8xvUY9WJvQ=s176-c-k-c0x00ffffff-no-rj",
     rating: 5
   },
   {
-    quote: "Fast turnaround and meets all deadlines!",
-    author: "RFG",
-    role: "434K subscribers",
-    avatar: "https://randomuser.me/api/portraits/women/29.jpg",
-    rating: 5
-  },
-  {
-    quote: "Amazing storytelling and exceptional editing skills!",
-    author: "JayWayyGaming",
-    role: "334K subscribers",
-    avatar: "https://randomuser.me/api/portraits/women/28.jpg",
-    rating: 5
-  },
-  {
-    quote: "Loved the intro! Looking forward to more collaborations.",
-    author: "ClayK",
-    role: "97K subscribers",
-    avatar: "https://randomuser.me/api/portraits/men/23.jpg",
+    quote: "Great work, Zyro! The multi-cam transitions were handled smoothly, and the comedy timing was spot on. The video was super fun to watch! Keep up the amazing edits.",
+    author: "Justmaiko Gaming",
+    role: "804K subscribers",
+    avatar: "https://yt3.googleusercontent.com/ytc/APkrFKYzqVkI_RGzYpXRyMvqYGCtHG5YL8J5TL4NMA=s176-c-k-c0x00ffffff-no-rj",
     rating: 5
   }
 ];

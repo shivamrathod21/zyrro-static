@@ -8,7 +8,9 @@ export const videoContent = pgTable("video_content", {
   section: text("section").notNull(), // 'hero', 'portfolio', 'before_after'
   title: text("title").notNull(),
   description: text("description"),
-  videoUrl: text("video_url").notNull(),
+  videoUrl: text("video_url"),
+  beforeVideoUrl: text("before_video_url"),
+  afterVideoUrl: text("after_video_url"),
   thumbnailUrl: text("thumbnail_url"),
   active: boolean("active").notNull().default(true),
   createdAt: text("created_at").notNull(),
@@ -20,6 +22,8 @@ export const insertVideoContentSchema = createInsertSchema(videoContent).pick({
   title: true,
   description: true,
   videoUrl: true,
+  beforeVideoUrl: true,
+  afterVideoUrl: true,
   thumbnailUrl: true,
   active: true
 });
@@ -44,8 +48,12 @@ export const adminSchema = z.object({
 });
 
 export const loginSchema = z.object({
-  username: z.string(),
-  password: z.string(),
+  username: z.string().min(3, {
+    message: "Username must be at least 3 characters.",
+  }),
+  password: z.string().min(4, {
+    message: "Password must be at least 4 characters.",
+  }),
 });
 
 export const bookings = pgTable("bookings", {
