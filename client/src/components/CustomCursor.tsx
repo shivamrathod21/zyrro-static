@@ -1,222 +1,196 @@
-import { useEffect, useState, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useEffect, useRef } from 'react';
+
+interface Particle {
+  x: number;
+  y: number;
+  vx: number;
+  vy: number;
+  radius: number;
+  alpha: number;
+  targetAlpha: number;
+}
 
 export default function CustomCursor() {
-  const [cursorVariant, setCursorVariant] = useState('default');
-  const [isActive, setIsActive] = useState(false);
-  const [isVisible, setIsVisible] = useState(true);
-  const cursorRef = useRef<HTMLDivElement>(null);
-  const cursorDotRef = useRef<HTMLDivElement>(null);
-  const requestRef = useRef<number | null>(null);
-  const previousTimeRef = useRef<number | null>(null);
-  
-  // Track mouse activity to hide/show cursor
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const particlesRef = useRef<Particle[]>([]);
+  const mouseRef = useRef({ x: 0, y: 0, prevX: 0, prevY: 0 });
+  const requestRef = useRef<number>();
+  const contextRef = useRef<CanvasRenderingContext2D | null>(null);
+  const velocityRef = useRef({ x: 0, y: 0 });
+  const previousTimeRef = useRef<number>();
+
   useEffect(() => {
-    let timeout: NodeJS.Timeout;
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    // Setup canvas with device pixel ratio for crisp rendering
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width = window.innerWidth * dpr;
+    canvas.height = window.innerHeight * dpr;
+    canvas.style.width = `${window.innerWidth}px`;
+    canvas.style.height = `${window.innerHeight}px`;
     
-    const handleMouseActivity = () => {
-      setIsVisible(true);
-      clearTimeout(timeout);
-      
-      timeout = setTimeout(() => {
-        // Only hide cursor after extended period of inactivity
-        if (cursorRef.current) {
-          setIsVisible(false);
+    const ctx = canvas.getContext('2d');
+    if (ctx) {
+      ctx.scale(dpr, dpr);
+      contextRef.current = ctx;
+    }
+
+    // Initialize particles
+    const initParticles = () => {
+      const particles: Particle[] = [];
+      const particleCount = 50;
+
+      for (let i = 0; i < particleCount; i++) {
+        particles.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          vx: (Math.random() - 0.5) * 0.5,
+          vy: (Math.random() - 0.5) * 0.5,
+          radius: Math.random() * 2 + 1,
+          alpha: Math.random() * 0.5,
+          targetAlpha: Math.random() * 0.5
+        });
+      }
+
+      particlesRef.current = particles;
+    };
+
+    // Animation loop
+    const animate = (timestamp: number) => {
+      const ctx = contextRef.current;
+      if (!ctx) return;
+
+      if (!previousTimeRef.current) previousTimeRef.current = timestamp;
+      const deltaTime = (timestamp - previousTimeRef.current) / 16; // Normalize to ~60fps
+      previousTimeRef.current = timestamp;
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Enable smooth rendering
+      ctx.imageSmoothingEnabled = true;
+      ctx.imageSmoothingQuality = 'high';
+
+      // Update and draw particles
+      particlesRef.current.forEach((particle) => {
+        // Apply velocity with delta time
+        particle.x += particle.vx * deltaTime;
+        particle.y += particle.vy * deltaTime;
+
+        // Smooth bounce off edges with easing
+        const bounce = 0.8;
+        if (particle.x < 0) {
+          particle.x = 0;
+          particle.vx = Math.abs(particle.vx) * bounce;
+        } else if (particle.x > canvas.width) {
+          particle.x = canvas.width;
+          particle.vx = -Math.abs(particle.vx) * bounce;
         }
-      }, 5000); // 5 seconds of inactivity
+        if (particle.y < 0) {
+          particle.y = 0;
+          particle.vy = Math.abs(particle.vy) * bounce;
+        } else if (particle.y > canvas.height) {
+          particle.y = canvas.height;
+          particle.vy = -Math.abs(particle.vy) * bounce;
+        }
+
+        // Enhanced mouse interaction with velocity influence
+        const dx = mouseRef.current.x - particle.x;
+        const dy = mouseRef.current.y - particle.y;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        const maxDistance = 200;
+
+        if (distance < maxDistance) {
+          const force = (maxDistance - distance) / maxDistance;
+          const easedForce = force * force * (3 - 2 * force); // Smooth step interpolation
+          particle.targetAlpha = Math.min(0.9, 0.5 + easedForce * 0.4);
+          
+          // Enhanced particle movement with mouse velocity influence
+          const repelStrength = 0.02 * deltaTime;
+          const velocityInfluence = 0.3;
+          
+          // Combine repulsion with mouse velocity
+          particle.vx = particle.vx * 0.92 +
+            (-dx / distance) * easedForce * repelStrength +
+            velocityRef.current.x * velocityInfluence * easedForce;
+          particle.vy = particle.vy * 0.92 +
+            (-dy / distance) * easedForce * repelStrength +
+            velocityRef.current.y * velocityInfluence * easedForce;
+          
+          // Add slight randomness for organic movement
+          particle.vx += (Math.random() - 0.5) * 0.05;
+          particle.vy += (Math.random() - 0.5) * 0.05;
+        } else {
+          particle.targetAlpha = 0.15 + Math.random() * 0.1;
+          
+          // Smoother return to neutral state
+          particle.vx *= 0.95;
+          particle.vy *= 0.95;
+        }
+
+        // Smooth alpha transition with easing
+        particle.alpha += (particle.targetAlpha - particle.alpha) * 0.15 * deltaTime;
+
+        // Draw particle with anti-aliasing
+        ctx.beginPath();
+        ctx.arc(particle.x, particle.y, particle.radius, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255, 215, 0, ${particle.alpha})`;
+        ctx.fill();
+      });
+
+      requestRef.current = requestAnimationFrame(animate);
     };
-    
-    window.addEventListener('mousemove', handleMouseActivity);
-    window.addEventListener('mousedown', handleMouseActivity);
-    
-    return () => {
-      window.removeEventListener('mousemove', handleMouseActivity);
-      window.removeEventListener('mousedown', handleMouseActivity);
-      clearTimeout(timeout);
-    };
-  }, []);
-  
-  // Main cursor animation and event logic
-  useEffect(() => {
-    // Don't show custom cursor immediately to avoid jumpy start
-    const initTimer = setTimeout(() => setIsActive(true), 300);
-    
-    // Add 'has-custom-cursor' class to body for proper styling
-    document.body.classList.add('has-custom-cursor');
-    
-    // Custom cursor variables
-    let mouseX = 0;
-    let mouseY = 0;
-    let cursorX = 0;
-    let cursorY = 0;
-    let targetX = 0;
-    let targetY = 0;
-    let magneticPullX = 0;
-    let magneticPullY = 0;
-    
-    // Smooth animation for cursor using RAF
-    const animateCursor = (time: number) => {
-      if (previousTimeRef.current === null) {
-        previousTimeRef.current = time;
-      }
-      
-      const deltaTime = time - (previousTimeRef.current || 0);
-      previousTimeRef.current = time;
-      
-      // Calculate cursor position with dynamic easing
-      const baseEasing = 0.08; // Base easing for smoother movement
-      const magneticEasing = cursorVariant === 'hover' ? 0.2 : baseEasing;
-      
-      // Apply magnetic effect when hovering
-      if (cursorVariant === 'hover') {
-        const magneticStrength = 40; // Adjust magnetic pull strength
-        targetX = mouseX + magneticPullX * magneticStrength;
-        targetY = mouseY + magneticPullY * magneticStrength;
-      } else {
-        targetX = mouseX;
-        targetY = mouseY;
-      }
-      
-      // Update cursor position with spring physics
-      const dx = targetX - cursorX;
-      const dy = targetY - cursorY;
-      const acceleration = cursorVariant === 'hover' ? 0.15 : 0.1;
-      
-      cursorX += dx * acceleration;
-      cursorY += dy * acceleration;
-      
-      // Apply position to cursor elements with hardware acceleration
-      if (cursorRef.current) {
-        cursorRef.current.style.transform = `translate3d(${cursorX}px, ${cursorY}px, 0) scale(${cursorVariant === 'hover' ? 1.5 : 1})`;
-      }
-      
-      if (cursorDotRef.current) {
-        // The dot follows the mouse with slight delay for trailing effect
-        const dotEasing = 0.2;
-        const dotX = mouseX + (cursorX - mouseX) * dotEasing;
-        const dotY = mouseY + (cursorY - mouseY) * dotEasing;
-        cursorDotRef.current.style.transform = `translate3d(${dotX}px, ${dotY}px, 0) scale(${cursorVariant === 'click' ? 0.5 : 1})`;
-      }
-      
-      requestRef.current = requestAnimationFrame(animateCursor);
-    };
-    
-    // Track mouse movement
+
+    // Handle mouse movement with velocity tracking
     const handleMouseMove = (e: MouseEvent) => {
-      // Get mouse position
-      mouseX = e.clientX;
-      mouseY = e.clientY;
+      const { x: prevX, y: prevY } = mouseRef.current;
+      const currentX = e.clientX;
+      const currentY = e.clientY;
+      
+      // Calculate mouse velocity
+      velocityRef.current = {
+        x: (currentX - prevX) * 0.1,
+        y: (currentY - prevY) * 0.1
+      };
+
+      mouseRef.current = {
+        x: currentX,
+        y: currentY,
+        prevX: prevX,
+        prevY: prevY
+      };
     };
-    
-    // Track clicks for animation
-    const handleMouseDown = () => setCursorVariant('click');
-    const handleMouseUp = () => setCursorVariant('default');
-    
-    // Track hover states on interactive elements
-    const handleElementMouseEnter = () => setCursorVariant('hover');
-    const handleElementMouseLeave = () => setCursorVariant('default');
-    
+
+    // Handle window resize
+    const handleResize = () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      initParticles();
+    };
+
     // Add event listeners
     window.addEventListener('mousemove', handleMouseMove);
-    window.addEventListener('mousedown', handleMouseDown);
-    window.addEventListener('mouseup', handleMouseUp);
-    
-    // Add hover listeners to interactive elements
-    const interactiveElements = document.querySelectorAll(
-      'a, button, input, textarea, select, [role="button"], .interactive'
-    );
-    
-    interactiveElements.forEach(el => {
-      el.addEventListener('mouseenter', handleElementMouseEnter);
-      el.addEventListener('mouseleave', handleElementMouseLeave);
-    });
-    
-    // Start the animation
-    requestRef.current = requestAnimationFrame(animateCursor);
-    
+    window.addEventListener('resize', handleResize);
+
+    // Initialize and start animation
+    initParticles();
+    requestRef.current = requestAnimationFrame(animate);
+
     // Cleanup
     return () => {
       if (requestRef.current) {
         cancelAnimationFrame(requestRef.current);
       }
-      
-      document.body.classList.remove('has-custom-cursor');
-      
       window.removeEventListener('mousemove', handleMouseMove);
-      window.removeEventListener('mousedown', handleMouseDown);
-      window.removeEventListener('mouseup', handleMouseUp);
-      
-      interactiveElements.forEach(el => {
-        el.removeEventListener('mouseenter', handleElementMouseEnter);
-        el.removeEventListener('mouseleave', handleElementMouseLeave);
-      });
-      
-      clearTimeout(initTimer);
+      window.removeEventListener('resize', handleResize);
     };
   }, []);
   
-  if (!isActive) return null;
-  
   return (
-    <AnimatePresence>
-      {isVisible && (
-        <>
-          {/* Main cursor circle with glow effect */}
-          <motion.div
-            ref={cursorRef}
-            className={`fixed top-0 left-0 pointer-events-none z-[10000] mix-blend-screen ${cursorVariant === 'hover' ? 'cursor-hover' : ''} ${cursorVariant === 'click' ? 'cursor-click' : ''}`}
-            initial={{ opacity: 0, scale: 0.5 }}
-            animate={{ 
-              opacity: cursorVariant === 'click' ? 0.9 : 0.7,
-              scale: cursorVariant === 'hover' ? 2 : 1
-            }}
-            exit={{ opacity: 0, scale: 0 }}
-            transition={{ duration: 0.2 }}
-          >
-            {/* Inner circle */}
-            <div className="relative w-8 h-8">
-              <div className="absolute inset-0 rounded-full bg-[#FFD700] opacity-30 blur-sm" />
-              <div className="absolute inset-2 rounded-full bg-[#FFD700] opacity-50" />
-              {cursorVariant === 'hover' && (
-                <div className="absolute inset-[-8px] rounded-full border-2 border-[#FFD700] opacity-20 animate-pulse" />
-              )}
-            </div>
-          </motion.div>
-          
-          {/* Trailing particles */}
-          <motion.div
-            ref={cursorDotRef}
-            className="fixed top-0 left-0 pointer-events-none z-[9999]"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.2 }}
-          >
-            <div className="relative">
-              {/* Multiple trailing dots with different sizes and delays */}
-              {[...Array(3)].map((_, i) => (
-                <motion.div
-                  key={i}
-                  className="absolute rounded-full bg-[#FFD700]"
-                  style={{
-                    width: `${6 - i * 2}px`,
-                    height: `${6 - i * 2}px`,
-                    opacity: 0.3 - i * 0.1
-                  }}
-                  animate={{
-                    scale: cursorVariant === 'click' ? [1, 1.5, 1] : 1
-                  }}
-                  transition={{
-                    duration: 0.5,
-                    delay: i * 0.05,
-                    ease: 'easeInOut'
-                  }}
-                />
-              ))}
-            </div>
-          </motion.div>
-        </>
-      )}
-    </AnimatePresence>
+    <canvas
+      ref={canvasRef}
+      className="fixed top-0 left-0 w-full h-full pointer-events-none z-[-1]"
+      style={{ background: 'transparent' }}
+    />
   );
 }
