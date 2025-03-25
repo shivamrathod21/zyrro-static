@@ -1,190 +1,198 @@
-import { useState, useEffect, useRef } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { StarIcon } from "@/lib/icons";
+import { motion, useAnimationControls, useTransform, useMotionValue } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
 
-// More testimonials with subscriber counts and avatars
 const testimonials = [
   {
-    quote: "bro...that edit is incredible! you have no idea how wonderful it is to work with you!!",
-    author: "Valekis",
-    role: "281K subscribers",
-    avatar: "https://yt3.googleusercontent.com/ytc/APkrFKbgqvyHEH2pQVT9UPw2Kj_GF5UQZHhbvS_GYSqJ=s176-c-k-c0x00ffffff-no-rj", 
-    rating: 5
+    logo: "https://zyrovisuals8055.s3.us-west-2.amazonaws.com/logo8055/AyeYahZeeLogo.jpg",
+    client: "AyeYahzee",
+    comment: "Just checked it out, bro! It's absolutely perfect!"
   },
   {
-    quote: "The animations are really good, pacing is perfect. its amazing!",
-    author: "AshleyBunni",
-    role: "348K subscribers",
-    avatar: "https://yt3.googleusercontent.com/ytc/APkrFKbXQpnFNEGAXr8YxZJFLSKdLQZt8xvUY9WJvQ=s176-c-k-c0x00ffffff-no-rj",
-    rating: 5
+    logo: "https://zyrovisuals8055.s3.us-west-2.amazonaws.com/logo8055/kikilogo.jpg",
+    client: "kiki",
+    comment: "Bro...that edit is incredible! Seriously, it's amazing working with you!"
   },
   {
-    quote: "Great work, Zyro! The multi-cam transitions were handled smoothly, and the comedy timing was spot on. The video was super fun to watch! Keep up the amazing edits.",
-    author: "Justmaiko Gaming",
-    role: "804K subscribers",
-    avatar: "https://yt3.googleusercontent.com/ytc/APkrFKYzqVkI_RGzYpXRyMvqYGCtHG5YL8J5TL4NMA=s176-c-k-c0x00ffffff-no-rj",
-    rating: 5
+    logo: "https://zyrovisuals8055.s3.us-west-2.amazonaws.com/logo8055/JustmaikoGaminglogo.jpg",
+    client: "Justmaikogaming",
+    comment: "Great work, Zyro! The multi-cam transitions were handled smoothly, and the comedy timing was spot on. The video was super fun to watch! Keep up the amazing edits."
+  },
+  {
+    logo: "https://zyrovisuals8055.s3.us-west-2.amazonaws.com/logo8055/Raylashonlogo.jpg",
+    client: "Raylashon",
+    comment: "Best Agency I've ever worked with! Great quality, fast delivery, excellent communication. Gets better and better each video. Always has new and improved ideas! Highly recommended 10/10!"
+  },
+  {
+    logo: "https://zyrovisuals8055.s3.us-west-2.amazonaws.com/logo8055/ValekisLogo.jpg",
+    client: "Valekis",
+    comment: "Dope Edits of all time working with them from so long and never disappointed with the quality always new and unexpected quality very hardworking team really suggest to work with them. Founder is doing Great Job."
+  },
+  {
+    logo: "https://zyrovisuals8055.s3.us-west-2.amazonaws.com/logo8055/officialalliebloxlogo.jpg",
+    client: "offcialalliebox",
+    comment: "Second time that I asked Zyro visual to help me edit a video, and he did not disappoint. His edits are top tier, and I was amazed when I first saw the video. I would definitely work with him again!"
+  },
+  {
+    logo: "https://zyrovisuals8055.s3.us-west-2.amazonaws.com/logo8055/ZariandZeelogo.jpg",
+    client: "zariandzee",
+    comment: "Big fan of Zyro Visual's work! You guys are seriously talented."
+  },
+  {
+    logo: "https://zyrovisuals8055.s3.us-west-2.amazonaws.com/logo8055/AshleyBunnilogo.jpg",
+    client: "Ashleybunni",
+    comment: "Zyro Visual is seriously killing it! The creativity and flow in the edits are unmatched. You guys make it look effortless, but it's clear how much talent and hard work goes into it."
   }
 ];
 
 export default function Testimonials() {
-  const [activeIndex, setActiveIndex] = useState(0);
-  const [autoplay, setAutoplay] = useState(true);
-  const [isDragging, setIsDragging] = useState(false);
-  const [startX, setStartX] = useState(0);
-  const [scrollLeft, setScrollLeft] = useState(0);
-  const sliderRef = useRef<HTMLDivElement>(null);
+  const [isHovered, setIsHovered] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const leftScrollX = useMotionValue(0);
+  const rightScrollX = useMotionValue(0);
+  const leftControls = useAnimationControls();
+  const rightControls = useAnimationControls();
+  const baseSpeed = 20;
+  const slowSpeed = 60;
 
-  // Autoplay functionality
+  const handleMouseEnter = () => setIsHovered(true);
+  const handleMouseLeave = () => setIsHovered(false);
+
   useEffect(() => {
-    if (!autoplay) return;
-    
-    const interval = setInterval(() => {
-      setActiveIndex((prev) => (prev + 1) % testimonials.length);
-      scrollToTestimonial((activeIndex + 1) % testimonials.length);
-    }, 4000);
-    
-    return () => clearInterval(interval);
-  }, [activeIndex, autoplay]);
+    if (containerRef.current) {
+      const containerWidth = containerRef.current.scrollWidth / 2;
+      const currentSpeed = isHovered ? slowSpeed : baseSpeed;
 
-  const scrollToTestimonial = (index: number) => {
-    if (!sliderRef.current) return;
-    
-    const slideWidth = sliderRef.current.scrollWidth / testimonials.length;
-    sliderRef.current.scrollTo({
-      left: slideWidth * index,
-      behavior: 'smooth'
-    });
-  };
+      // Left-to-right animation
+      leftControls.start({
+        x: [0, containerWidth],
+        transition: {
+          duration: currentSpeed,
+          ease: "linear",
+          repeat: Infinity,
+          repeatType: "loop",
+          repeatDelay: 0
+        }
+      });
 
-  const handleMouseDown = (e: React.MouseEvent) => {
-    if (!sliderRef.current) return;
-    
-    setIsDragging(true);
-    setAutoplay(false);
-    setStartX(e.pageX - sliderRef.current.offsetLeft);
-    setScrollLeft(sliderRef.current.scrollLeft);
-  };
-
-  const handleMouseUp = () => {
-    setIsDragging(false);
-    setAutoplay(true);
-    
-    // Find the closest testimonial based on scroll position
-    if (sliderRef.current) {
-      const slideWidth = sliderRef.current.scrollWidth / testimonials.length;
-      const index = Math.round(sliderRef.current.scrollLeft / slideWidth);
-      setActiveIndex(index);
-      scrollToTestimonial(index);
+      // Right-to-left animation
+      rightControls.start({
+        x: [-containerWidth, 0],
+        transition: {
+          duration: currentSpeed,
+          ease: "linear",
+          repeat: Infinity,
+          repeatType: "loop",
+          repeatDelay: 0
+        }
+      });
     }
-  };
-
-  const handleMouseMove = (e: React.MouseEvent) => {
-    if (!isDragging || !sliderRef.current) return;
-    
-    e.preventDefault();
-    const x = e.pageX - sliderRef.current.offsetLeft;
-    const walk = (x - startX) * 2; // Drag sensitivity
-    sliderRef.current.scrollLeft = scrollLeft - walk;
-  };
+  }, [leftControls, rightControls, isHovered, baseSpeed, slowSpeed]);
 
   return (
-    <section id="testimonials" className="py-12 md:py-16 bg-black/50">
+    <section 
+      id="testimonials" 
+      className="py-16 md:py-24 bg-black/50 overflow-hidden"
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+    >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div 
-          className="text-center mb-8"
+          className="text-center mb-16"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
           viewport={{ once: true }}
         >
           <h2 className="text-3xl md:text-4xl font-bold mb-4 font-['Iceland'] tracking-wider">
-            Trusted by <span className="text-[#FFD700]">Top Gaming Creators</span>
+            What Our <span className="text-[#FFD700]">Clients Say</span>
           </h2>
-          <p className="text-gray-400 max-w-2xl mx-auto text-sm mb-8">
-            Delivering high-quality edits for gaming content creators worldwide
+          <p className="text-gray-400 max-w-2xl mx-auto text-sm">
+            Delivering exceptional results for content creators worldwide
           </p>
         </motion.div>
 
-        {/* Horizontal scrollable testimonials */}
-        <div 
-          className="relative overflow-hidden"
-          onMouseLeave={handleMouseUp}
-        >
-          <div 
-            ref={sliderRef}
-            className="flex overflow-x-auto pb-6 scrollbar-hide snap-x snap-mandatory"
-            style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
-            onMouseDown={handleMouseDown}
-            onMouseUp={handleMouseUp}
-            onMouseMove={handleMouseMove}
+        <div className="relative overflow-hidden h-[400px]" ref={containerRef}>
+          {/* Left-to-right scroll container */}
+          <motion.div 
+            className="flex gap-6 absolute left-0 right-0"
+            style={{ x: leftScrollX }}
+            animate={leftControls}
           >
-            {testimonials.map((testimonial, idx) => (
-              <div 
-                key={idx}
-                className="min-w-[300px] md:min-w-[350px] p-4 snap-start snap-always mr-4 flex-shrink-0"
-              >
-                <motion.div 
-                  className="bg-[#111111] rounded-lg p-6 h-full flex flex-col shadow-lg border border-gray-800"
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.3, delay: idx * 0.1 }}
-                  whileHover={{ y: -5, boxShadow: '0 10px 25px -5px rgba(255, 215, 0, 0.1)' }}
-                >
-                  <div className="flex items-center mb-4">
-                    <img 
-                      src={testimonial.avatar}
-                      alt={testimonial.author} 
-                      className="w-12 h-12 rounded-full border-2 border-[#FFD700] mr-4"
-                    />
-                    <div>
-                      <h3 className="font-semibold text-white text-md">{testimonial.author}</h3>
-                      <p className="text-gray-400 text-xs">{testimonial.role}</p>
-                    </div>
-                  </div>
-                  
-                  <div className="flex mb-3">
-                    {[...Array(testimonial.rating)].map((_, i) => (
-                      <StarIcon key={i} className="text-[#FFD700] w-4 h-4" />
-                    ))}
-                  </div>
-                  
-                  <blockquote className="text-gray-300 text-sm italic flex-grow">
-                    "{testimonial.quote}"
-                  </blockquote>
-                </motion.div>
-              </div>
-            ))}
-          </div>
-
-          {/* Dots indicator */}
-          <div className="flex justify-center mt-6 gap-2">
-            {testimonials.map((_, index) => (
-              <button
-                key={index}
-                onClick={() => {
-                  setActiveIndex(index);
-                  scrollToTestimonial(index);
+            {testimonials.map((testimonial, index) => (
+              <motion.div
+                key={`left-${index}`}
+                className="bg-[#111111] rounded-lg p-6 shadow-lg border border-gray-800 min-w-[300px] md:min-w-[400px]"
+                initial={{ opacity: 0, y: 50 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ 
+                  duration: 0.5,
+                  delay: index * 0.1,
+                  type: "spring",
+                  damping: 15
                 }}
-                className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                  index === activeIndex 
-                    ? 'bg-[#FFD700] w-6' 
-                    : 'bg-gray-600 hover:bg-gray-500'
-                }`}
-                aria-label={`Go to testimonial ${index + 1}`}
-              />
+                viewport={{ once: true, margin: "-100px" }}
+                whileHover={{ 
+                  y: -10,
+                  transition: { duration: 0.3 }
+                }}
+              >
+                <div className="flex items-center mb-4">
+                  <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-[#FFD700] mr-4">
+                    <img 
+                      src={testimonial.logo}
+                      alt={`${testimonial.client}'s logo`}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <h3 className="font-semibold text-white text-lg">{testimonial.client}</h3>
+                </div>
+                <blockquote className="text-gray-300 text-sm italic">
+                  "{testimonial.comment}"
+                </blockquote>
+              </motion.div>
             ))}
-          </div>
+          </motion.div>
 
-          {/* Background decorative element */}
-          <div className="absolute -bottom-10 left-1/2 transform -translate-x-1/2 w-full h-40 opacity-10 z-[-1]">
-            <svg width="100%" height="100%" viewBox="0 0 1000 100" preserveAspectRatio="none">
-              <path 
-                d="M0,0 C300,80 500,20 1000,80 L1000,100 L0,100 Z" 
-                fill="#FFD700"
-              ></path>
-            </svg>
-          </div>
+          {/* Right-to-left scroll container */}
+          <motion.div 
+            className="flex gap-6 absolute left-0 right-0 top-[200px]"
+            style={{ x: rightScrollX }}
+            animate={rightControls}
+          >
+            {testimonials.map((testimonial, index) => (
+              <motion.div
+                key={`right-${index}`}
+                className="bg-[#111111] rounded-lg p-6 shadow-lg border border-gray-800 min-w-[300px] md:min-w-[400px]"
+                initial={{ opacity: 0, y: 50 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ 
+                  duration: 0.5,
+                  delay: index * 0.1,
+                  type: "spring",
+                  damping: 15
+                }}
+                viewport={{ once: true, margin: "-100px" }}
+                whileHover={{ 
+                  y: -10,
+                  transition: { duration: 0.3 }
+                }}
+              >
+                <div className="flex items-center mb-4">
+                  <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-[#FFD700] mr-4">
+                    <img 
+                      src={testimonial.logo}
+                      alt={`${testimonial.client}'s logo`}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <h3 className="font-semibold text-white text-lg">{testimonial.client}</h3>
+                </div>
+                <blockquote className="text-gray-300 text-sm italic">
+                  "{testimonial.comment}"
+                </blockquote>
+              </motion.div>
+            ))}
+          </motion.div>
         </div>
       </div>
     </section>

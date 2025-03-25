@@ -2,7 +2,6 @@ import Header from "@/components/Header";
 import Hero from "@/components/Hero";
 import Services from "@/components/Services";
 import WhyChooseUs from "@/components/WhyChooseUs";
-import BeforeAfter from "@/components/BeforeAfter";
 import Portfolio from "@/components/Portfolio";
 import Creators from "@/components/Creators";
 import Testimonials from "@/components/Testimonials";
@@ -92,9 +91,6 @@ export default function Home() {
         </section>
         <section id="whychooseus">
           <WhyChooseUs />
-        </section>
-        <section id="beforeafter">
-          <BeforeAfter />
         </section>
         <section id="portfolio">
           <Portfolio />

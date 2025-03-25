@@ -88,7 +88,7 @@ export default function Hero() {
           }}
         >
           <source 
-            src={heroVideo?.videoUrl || "https://res.cloudinary.com/do8nyydiy/video/upload/samples/dance-2.mp4"}
+            src="https://d2cyxftnhm9wb.cloudfront.net/webvideoseth.mp4"
             type="video/mp4" 
           />
           Your browser does not support the video tag.

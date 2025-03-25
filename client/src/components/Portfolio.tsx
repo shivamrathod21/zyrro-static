@@ -1,369 +1,264 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { useState, useEffect } from "react";
-import { FilmIcon, GamepadIcon, TrophyIcon, ZapIcon } from "@/lib/icons";
-import { getOptimizedImageUrl, generateSrcSet, generateSizes } from "@/lib/imageOptimizer";
+import { useState } from "react";
+import { FaYoutube, FaTwitter, FaInstagram, FaDiscord } from "react-icons/fa";
+import { Mail } from "lucide-react";
 
-// Extended portfolio items with more metadata and examples
-const portfolioItems = [
+const videos = [
   {
     id: 1,
-    title: "Gaming Highlights",
-    description: "Epic gaming moments with dynamic transitions and effects.",
-    category: "Gaming",
-    platform: "YouTube",
-    game: "Fortnite",
-    imageSrc: "https://images.unsplash.com/photo-1542751371-adc38448a05e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+    embedId: "Hcxt5BOMe2E",
+    title: "Featured Gaming Montage",
+    description: "Latest gaming montage showcasing epic moments and stunning visual effects."
   },
   {
     id: 2,
-    title: "Stream Compilation",
-    description: "Best moments from live streams with professional editing.",
-    category: "Streaming",
-    platform: "Twitch",
-    game: "Minecraft",
-    imageSrc: "https://images.unsplash.com/photo-1603481588273-2f908a9a7a1b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+    embedId: "09SrtkpeoXU",
+    title: "Gaming Highlights 2024",
+    description: "Intense gaming action with professional editing and transitions."
   },
   {
     id: 3,
-    title: "Esports Recap",
-    description: "Professional tournament highlight videos with dynamic graphics.",
-    category: "Esports",
-    platform: "YouTube",
-    game: "Valorant",
-    imageSrc: "https://images.unsplash.com/photo-1560419015-7c427e8ae5ba?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+    embedId: "YUhMjqFP2I0",
+    title: "Esports Showcase",
+    description: "Professional tournament highlights and competitive gameplay moments."
   },
   {
     id: 4,
-    title: "Gameplay Trailers",
-    description: "Cinematic game trailers that showcase your gameplay at its best.",
-    category: "Trailers",
-    platform: "YouTube",
-    game: "Call of Duty",
-    imageSrc: "https://images.unsplash.com/photo-1556438064-2d7646166914?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+    embedId: "x3nmdp0YsLE",
+    title: "Stream Highlights",
+    description: "Best moments from live streams with dynamic effects."
   },
   {
     id: 5,
-    title: "Stream Highlights",
-    description: "Best moments from your gaming streams edited for maximum impact.",
-    category: "Streaming",
-    platform: "Twitch",
-    game: "Apex Legends",
-    imageSrc: "https://images.unsplash.com/photo-1598550476439-6847785fcea6?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+    embedId: "1Wy4iWt8tRc",
+    title: "Gaming Portfolio",
+    description: "Showcase of gaming edits and visual effects mastery."
   },
   {
     id: 6,
-    title: "Tournament Montage",
-    description: "High-energy montage of tournament gameplay with custom effects.",
-    category: "Esports",
-    platform: "YouTube",
-    game: "League of Legends",
-    imageSrc: "https://images.unsplash.com/photo-1511512578047-dfb367046420?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+    embedId: "qFl0Fk_RwBE",
+    title: "Advanced Gaming Edits",
+    description: "Showcasing advanced editing techniques and special effects."
+  },
+  {
+    id: 7,
+    embedId: "_HEtLfU_ha0",
+    title: "Pro Gaming Moments",
+    description: "Collection of professional gaming highlights and epic plays."
+  },
+  {
+    id: 8,
+    embedId: "Hx0lj5SZD-M",
+    title: "Competitive Gameplay",
+    description: "High-intensity competitive gaming moments with dynamic editing."
+  },
+  {
+    id: 9,
+    embedId: "KxZhBd_7T0Q",
+    title: "Gaming Excellence",
+    description: "Masterful editing showcasing the best of gaming content."
   }
 ];
 
-// Filter button component
-const FilterButton = ({ 
-  active, 
-  onClick, 
-  children, 
-  icon: Icon 
-}: { 
-  active: boolean, 
-  onClick: () => void, 
-  children: React.ReactNode,
-  icon?: React.ComponentType<any>
-}) => (
-  <button
-    onClick={onClick}
-    className={`flex items-center px-4 py-2 rounded-full text-sm transition-all duration-300 ${
-      active 
-        ? "bg-[#FFD700] text-black font-medium shadow-lg shadow-[#FFD700]/20" 
-        : "bg-[#222222] text-gray-300 hover:bg-[#333333]"
-    }`}
+const SocialLink = ({ icon: Icon, href, label }: { icon: any; href: string; label: string }) => (
+  <a
+    href={href}
+    target="_blank"
+    rel="noopener noreferrer"
+    className="flex items-center gap-2 text-gray-400 hover:text-[#FFD700] transition-colors duration-300"
+    aria-label={label}
   >
-    {Icon && <Icon className={`mr-2 h-4 w-4 ${active ? "text-black" : "text-[#FFD700]"}`} />}
-    {children}
-  </button>
+    <Icon className="w-5 h-5" />
+    <span>{label}</span>
+  </a>
 );
 
+interface PortfolioItem {
+  id: number;
+  title: string;
+  description: string;
+  imageSrc: string;
+  platform: string;
+  game: string;
+  category: string;
+}
+
+const portfolioItems: PortfolioItem[] = [
+  {
+    id: 1,
+    title: "Fortnite Montage 2024",
+    description: "High-energy gameplay highlights with stunning visual effects",
+    imageSrc: "https://raw.githubusercontent.com/shivamrathod21/ZYRO_VISUAL/main/images/fortnite-thumbnail.jpg",
+    platform: "PC",
+    game: "Fortnite",
+    category: "Montage"
+  },
+  {
+    id: 2,
+    title: "Call of Duty Highlights",
+    description: "Professional tournament gameplay with dynamic transitions",
+    imageSrc: "https://raw.githubusercontent.com/shivamrathod21/ZYRO_VISUAL/main/images/cod-thumbnail.jpg",
+    platform: "PlayStation",
+    game: "Call of Duty",
+    category: "Highlights"
+  },
+  {
+    id: 3,
+    title: "Valorant Pro Plays",
+    description: "Competitive gameplay moments with cinematic effects",
+    imageSrc: "https://raw.githubusercontent.com/shivamrathod21/ZYRO_VISUAL/main/images/valorant-thumbnail.jpg",
+    platform: "PC",
+    game: "Valorant",
+    category: "Pro Plays"
+  },
+  {
+    id: 4,
+    title: "Apex Legends Stream",
+    description: "Live stream highlights with seamless transitions",
+    imageSrc: "https://raw.githubusercontent.com/shivamrathod21/ZYRO_VISUAL/main/images/apex-thumbnail.jpg",
+    platform: "Xbox",
+    game: "Apex Legends",
+    category: "Stream"
+  }
+];
+
 export default function Portfolio() {
-  // Filter state
-  const [filter, setFilter] = useState("all");
-  const [filteredItems, setFilteredItems] = useState(portfolioItems);
-  const [activeFilters, setActiveFilters] = useState<Record<string, Set<string>>>({
-    category: new Set(),
-    platform: new Set(),
-    game: new Set()
-  });
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [currentVideo, setCurrentVideo] = useState(videos[0]);
+  const socialLinks = [
+    { icon: FaTwitter, href: "https://x.com/ZyroVisual", label: "Twitter" },
+    { icon: FaDiscord, href: "https://discord.com/users/863354644926693396", label: "Discord" },
+    { icon: Mail, href: "mailto:zyrovisual158@gmail.com", label: "Email" }
+  ];
 
-  // Update filtered items when filters change
-  useEffect(() => {
-    let result = [...portfolioItems];
-    
-    // Apply category filter if needed
-    if (filter !== "all") {
-      result = result.filter(item => item.category === filter);
-    }
-    
-    // Apply additional active filters
-    if (activeFilters.category.size > 0) {
-      result = result.filter(item => activeFilters.category.has(item.category));
-    }
-    
-    if (activeFilters.platform.size > 0) {
-      result = result.filter(item => activeFilters.platform.has(item.platform));
-    }
-    
-    if (activeFilters.game.size > 0) {
-      result = result.filter(item => activeFilters.game.has(item.game));
-    }
-    
-    setFilteredItems(result);
-  }, [filter, activeFilters]);
-
-  // Toggle specific filter values
-  const toggleFilter = (type: 'category' | 'platform' | 'game', value: string) => {
-    setActiveFilters(prev => {
-      const newFilters = { ...prev };
-      if (newFilters[type].has(value)) {
-        newFilters[type].delete(value);
-      } else {
-        newFilters[type].add(value);
-      }
-      return newFilters;
-    });
+  const creatorInfo = {
+    name: "Zyro Visuals",
+    bio: "Professional gaming video editor specializing in high-energy montages, stream highlights, and esports content. Creating stunning visual experiences that capture the excitement of gaming.",
+    experience: "5+ years of video editing experience",
+    specialties: ["Gaming Montages", "Stream Highlights", "Esports Content", "Motion Graphics"]
   };
 
-  // Clear all filters
-  const clearFilters = () => {
-    setFilter("all");
-    setActiveFilters({
-      category: new Set(),
-      platform: new Set(),
-      game: new Set()
-    });
-  };
-
-  // Get unique categories
-  const categories = Array.from(new Set(portfolioItems.map(item => item.category)));
-  
-  // Get unique platforms
-  const platforms = Array.from(new Set(portfolioItems.map(item => item.platform)));
-  
-  // Get unique games
-  const games = Array.from(new Set(portfolioItems.map(item => item.game)));
-
-  // Get icon for category
-  const getCategoryIcon = (category: string) => {
-    switch(category) {
-      case 'Gaming': return GamepadIcon;
-      case 'Streaming': return FilmIcon;
-      case 'Esports': return TrophyIcon;
-      case 'Trailers': return ZapIcon;
-      default: return undefined;
-    }
-  };
+  const stats = [
+    { label: "Projects Completed", value: "500+" },
+    { label: "Happy Clients", value: "200+" },
+    { label: "Years Experience", value: "5+" }
+  ];
 
   return (
-    <section id="portfolio" className="py-16 md:py-24">
+    <section id="portfolio" className="py-16 md:py-24 bg-[#111111]">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <motion.div 
-          className="text-center mb-12"
+        <motion.div
+          className="grid md:grid-cols-2 gap-8 lg:gap-12"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
           viewport={{ once: true }}
         >
-          <h2 className="text-3xl md:text-4xl font-bold mb-4 font-['Iceland'] tracking-wider">
-            Our Portfolio <span className="text-[#FFD700]">Showcase</span>
-          </h2>
-          <p className="text-gray-400 max-w-3xl mx-auto mb-8">
-            Browse through our latest work and see how we help our clients achieve their creative vision.
-          </p>
-          
-          {/* Main category filters */}
-          <div className="flex flex-wrap justify-center gap-2 mb-4">
-            <FilterButton
-              active={filter === "all"}
-              onClick={() => setFilter("all")}
-            >
-              All Projects
-            </FilterButton>
-            
-            {categories.map(category => (
-              <FilterButton
-                key={category}
-                active={filter === category}
-                onClick={() => setFilter(category)}
-                icon={getCategoryIcon(category)}
-              >
-                {category}
-              </FilterButton>
-            ))}
-          </div>
-          
-          {/* Advanced filters (expandable) */}
-          <div className="mt-4 mb-8">
-            <Button 
-              variant="ghost" 
-              onClick={() => setIsExpanded(!isExpanded)}
-              className="text-sm text-gray-400 hover:text-[#FFD700] mb-2"
-            >
-              {isExpanded ? "Hide Filters" : "Advanced Filters"}
-              <svg 
-                xmlns="http://www.w3.org/2000/svg" 
-                className={`h-4 w-4 ml-1 transition-transform ${isExpanded ? "rotate-180" : ""}`} 
-                fill="none" 
-                viewBox="0 0 24 24" 
-                stroke="currentColor"
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-              </svg>
-            </Button>
-            
-            <AnimatePresence>
-              {isExpanded && (
-                <motion.div
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: "auto" }}
-                  exit={{ opacity: 0, height: 0 }}
-                  transition={{ duration: 0.3 }}
-                  className="bg-[#111111] rounded-lg p-4 overflow-hidden max-w-3xl mx-auto"
+          {/* Video Section */}
+          <div className="space-y-6">
+            <div className="aspect-video bg-black rounded-lg overflow-hidden shadow-xl">
+              <iframe
+                width="100%"
+                height="100%"
+                src={`https://www.youtube.com/embed/${currentVideo.embedId}`}
+                title={currentVideo.title}
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+                className="w-full h-full"
+              />
+            </div>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+              {videos.map((video) => (
+                <button
+                  key={video.id}
+                  onClick={() => setCurrentVideo(video)}
+                  className={`aspect-video bg-[#222222] rounded-lg overflow-hidden transition-all duration-300 ${
+                    currentVideo.id === video.id
+                      ? "ring-2 ring-[#FFD700] transform scale-105"
+                      : "hover:ring-2 hover:ring-[#FFD700]/50"
+                  }`}
                 >
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    {/* Platform filters */}
-                    <div>
-                      <h3 className="text-white font-medium mb-2 text-sm">Platform</h3>
-                      <div className="flex flex-wrap gap-2">
-                        {platforms.map(platform => (
-                          <button
-                            key={platform}
-                            onClick={() => toggleFilter('platform', platform)}
-                            className={`text-xs px-2 py-1 rounded-full ${
-                              activeFilters.platform.has(platform)
-                                ? "bg-[#FFD700] text-black"
-                                : "bg-[#222222] text-gray-300 hover:bg-[#333333]"
-                            }`}
-                          >
-                            {platform}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                    
-                    {/* Game filters */}
-                    <div>
-                      <h3 className="text-white font-medium mb-2 text-sm">Game</h3>
-                      <div className="flex flex-wrap gap-2">
-                        {games.map(game => (
-                          <button
-                            key={game}
-                            onClick={() => toggleFilter('game', game)}
-                            className={`text-xs px-2 py-1 rounded-full ${
-                              activeFilters.game.has(game)
-                                ? "bg-[#FFD700] text-black"
-                                : "bg-[#222222] text-gray-300 hover:bg-[#333333]"
-                            }`}
-                          >
-                            {game}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                    
-                    {/* Clear all filters */}
-                    <div className="flex items-end justify-end">
-                      <Button 
-                        variant="outline" 
-                        onClick={clearFilters}
-                        className="text-xs h-8 border-gray-700 text-gray-400 hover:text-white hover:border-gray-500"
-                      >
-                        Clear All Filters
-                      </Button>
-                    </div>
+                  <img
+                    src={`https://img.youtube.com/vi/${video.embedId}/mqdefault.jpg`}
+                    alt={video.title}
+                    className="w-full h-full object-cover"
+                  />
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Creator Info Section */}
+          <div className="space-y-8">
+            <div>
+              <h2 className="text-3xl md:text-4xl font-bold mb-4 font-['Iceland'] tracking-wider">
+                About <span className="text-[#FFD700]">The Creator</span>
+              </h2>
+              <p className="text-gray-400 mb-6">{creatorInfo.bio}</p>
+              
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-8">
+                {stats.map((stat, index) => (
+                  <div key={index} className="bg-[#222222] p-4 rounded-lg text-center">
+                    <div className="text-[#FFD700] text-2xl font-bold mb-1">{stat.value}</div>
+                    <div className="text-gray-400 text-sm">{stat.label}</div>
                   </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
+                ))}
+              </div>
+
+              <div className="space-y-4">
+                <h3 className="text-xl font-semibold mb-2">Specialties</h3>
+                <div className="flex flex-wrap gap-2">
+                  {creatorInfo.specialties.map((specialty, index) => (
+                    <span
+                      key={index}
+                      className="bg-[#222222] text-gray-300 px-3 py-1 rounded-full text-sm"
+                    >
+                      {specialty}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            <div className="space-y-4">
+              <h3 className="text-xl font-semibold mb-2">Connect With Me</h3>
+              <div className="flex flex-col space-y-3">
+                {socialLinks.map((link, index) => (
+                  <SocialLink key={index} {...link} />
+                ))}
+              </div>
+            </div>
+
+            <Button
+              asChild
+              className="w-full sm:w-auto bg-[#FFD700] text-black hover:bg-[#FFD700]/80 transition-all duration-300"
+            >
+              <a
+                href="https://calendly.com/zyrovisuals/book"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center"
+              >
+                Book a Consultation
+              </a>
+            </Button>
           </div>
         </motion.div>
 
-        {/* Portfolio grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <AnimatePresence>
-            {filteredItems.length > 0 ? (
-              filteredItems.map((item, index) => (
-                <motion.div 
-                  key={item.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, scale: 0.9 }}
-                  transition={{ duration: 0.4, delay: index * 0.1 }}
-                  layout
-                  className="group relative bg-[#111111] overflow-hidden rounded-lg transition-all duration-300 hover:shadow-lg hover:shadow-[#FFD700]/10"
-                >
-                  <div className="aspect-video bg-[#222222] relative overflow-hidden">
-                    <img 
-                      src={getOptimizedImageUrl(item.imageSrc, 800, 85)}
-                      alt={`${item.title} Thumbnail`} 
-                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                      loading="lazy"
-                      srcSet={generateSrcSet(item.imageSrc)}
-                      sizes={generateSizes()}
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent opacity-70"></div>
-                    <div className="absolute top-3 right-3 flex gap-2">
-                      <span className="bg-black/50 backdrop-blur-sm text-white text-xs px-2 py-1 rounded">
-                        {item.platform}
-                      </span>
-                      <span className="bg-black/50 backdrop-blur-sm text-white text-xs px-2 py-1 rounded">
-                        {item.game}
-                      </span>
-                    </div>
-                    <div className="absolute bottom-0 left-0 p-4">
-                      <h3 className="text-xl font-bold mb-1">{item.title}</h3>
-                      <p className="text-sm text-gray-300 mb-3">{item.description}</p>
-                      <div className="flex items-center justify-between">
-                        <span className="bg-[#FFD700]/20 text-[#FFD700] text-xs px-2 py-1 rounded">{item.category}</span>
-                        <Button 
-                          variant="link" 
-                          className="text-white hover:text-[#FFD700] transition-colors p-0 text-sm font-medium"
-                        >
-                          View Project
-                        </Button>
-                      </div>
-                    </div>
-                  </div>
-                </motion.div>
-              ))
-            ) : (
-              <motion.div 
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="col-span-full py-10 text-center"
-              >
-                <p className="text-gray-400 mb-4">No projects match your current filters.</p>
-                <Button variant="outline" onClick={clearFilters}>
-                  Reset Filters
-                </Button>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
 
-        <div className="text-center mt-12">
-          <Button asChild className="bg-[#FFD700] text-black hover:bg-[#FFD700]/80 transition-all duration-300">
-            <a href="/portfolio" className="inline-flex items-center">
-              View All Projects
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-              </svg>
-            </a>
-          </Button>
-        </div>
       </div>
     </section>
   );
 }
+
+const getOptimizedImageUrl = (url: string, width: number, quality: number) => {
+  return url; // In a real app, you'd implement image optimization here
+};
+
+const generateSrcSet = (url: string) => {
+  return `${url} 1x, ${url} 2x`; // In a real app, you'd generate proper srcSet
+};
+
+const generateSizes = () => {
+  return '(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw';
+};

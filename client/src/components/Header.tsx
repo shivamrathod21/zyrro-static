@@ -72,7 +72,7 @@ export default function Header() {
               transition={{ duration: 0.2 }}
             >
               <img
-                src="https://raw.githubusercontent.com/shivamrathod21/ZYRO_VISUAL/main/images/zyro-visuals.png"
+                src="https://zyrovisuals8055.s3.us-west-2.amazonaws.com/zyrologowithoutbg.png"
                 alt="Zyro-Visuals Logo"
                 className="h-8 mr-3"
               />
