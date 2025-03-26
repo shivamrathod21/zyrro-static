@@ -1,0 +1,99 @@
+name: Deploy to AWS
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Use Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18.x'
+        cache: 'npm'
+    
+    - name: Install dependencies
+      run: npm ci
+    
+    - name: Run tests
+      run: npm test || true
+    
+    - name: Build
+      run: npm run build
+    
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v2
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: us-east-1
+    
+    # Option 1: Deploy using EC2
+    - name: Deploy to EC2
+      if: github.ref == 'refs/heads/main' && env.DEPLOY_TARGET == 'ec2'
+      env:
+        DEPLOY_TARGET: ${{ secrets.DEPLOY_TARGET }}
+        EC2_SSH_KEY: ${{ secrets.EC2_SSH_KEY }}
+        EC2_HOST: ${{ secrets.EC2_HOST }}
+        EC2_USERNAME: ${{ secrets.EC2_USERNAME }}
+      run: |
+        echo "$EC2_SSH_KEY" > private_key.pem
+        chmod 600 private_key.pem
+        
+        # Create deployment package
+        mkdir -p deploy
+        cp -r dist deploy/
+        cp package*.json deploy/
+        cp Dockerfile deploy/
+        cp -r server deploy/
+        
+        # Deploy to EC2
+        scp -i private_key.pem -o StrictHostKeyChecking=no -r deploy/* ${EC2_USERNAME}@${EC2_HOST}:/home/${EC2_USERNAME}/zyro/
+        ssh -i private_key.pem -o StrictHostKeyChecking=no ${EC2_USERNAME}@${EC2_HOST} 'cd /home/${EC2_USERNAME}/zyro && npm ci --production && pm2 restart zyro || pm2 start dist/index.js --name "zyro"'
+    
+    # Option 2: Deploy using Elastic Beanstalk
+    - name: Deploy to Elastic Beanstalk
+      if: github.ref == 'refs/heads/main' && env.DEPLOY_TARGET == 'eb'
+      env:
+        DEPLOY_TARGET: ${{ secrets.DEPLOY_TARGET }}
+        EB_APPLICATION_NAME: ${{ secrets.EB_APPLICATION_NAME }}
+        EB_ENVIRONMENT_NAME: ${{ secrets.EB_ENVIRONMENT_NAME }}
+      run: |
+        # Install EB CLI
+        pip install awsebcli --upgrade
+        
+        # Create deployment package
+        mkdir -p .elasticbeanstalk
+        cat > .elasticbeanstalk/config.yml << EOL
+        branch-defaults:
+          main:
+            environment: ${EB_ENVIRONMENT_NAME}
+        global:
+          application_name: ${EB_APPLICATION_NAME}
+          default_region: us-east-1
+        EOL
+        
+        # Deploy to Elastic Beanstalk
+        eb deploy ${EB_ENVIRONMENT_NAME} --staged
+    
+    # Option 3: Deploy using AWS App Runner
+    - name: Deploy to AWS App Runner
+      if: github.ref == 'refs/heads/main' && env.DEPLOY_TARGET == 'apprunner'
+      env:
+        DEPLOY_TARGET: ${{ secrets.DEPLOY_TARGET }}
+        APP_RUNNER_SERVICE: ${{ secrets.APP_RUNNER_SERVICE }}
+      run: |
+        # Install AWS CLI
+        pip install awscli --upgrade
+        
+        # Create deployment package
+        zip -r deploy.zip dist/ package.json package-lock.json
+        
+        # Deploy to App Runner using AWS CLI
+        aws apprunner update-service --service-arn ${APP_RUNNER_SERVICE} --source-configuration '{"CodeRepository":{"RepositoryUrl":"${{ github.repository }}","SourceCodeVersion":{"Type":"Branch","Value":"main"}}}' 

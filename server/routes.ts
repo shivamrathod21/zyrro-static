@@ -41,8 +41,8 @@ const demoVideos = [
   {
     id: 1,
     section: 'hero',
-    title: 'Cinematic Demo Reel',
-    description: 'Professional video editing showcase',
+    title: 'I KEEP THEM',
+    description: 'You want to hook them too?',
     videoUrl: 'https://assets.mixkit.co/videos/preview/mixkit-tree-with-yellow-flowers-1173-large.mp4',
     thumbnailUrl: null,
     active: true,

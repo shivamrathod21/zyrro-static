@@ -53,8 +53,13 @@ export default function AdminLogin() {
       });
       setLocation("/admin");
     },
-    onError: (error: any) => {
-      setError(error.response?.data?.message || "Failed to login");
+    onError: (error: Error) => {
+      setError(error.message || "Failed to login");
+      toast({
+        title: "Login Failed",
+        description: error.message || "Please check your credentials and try again",
+        variant: "destructive",
+      });
     },
   });
 

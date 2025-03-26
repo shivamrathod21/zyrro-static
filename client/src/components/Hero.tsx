@@ -111,7 +111,7 @@ export default function Hero() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
             >
-              {heroVideo?.title || "I KEEP THEM"} <motion.span 
+              I KEEP THEM <motion.span 
                 className="text-[#FFD700] inline-block"
                 animate={{
                   textShadow: ['0 0 0px #FFD700', '0 0 20px #FFD700', '0 0 0px #FFD700'],
@@ -130,7 +130,7 @@ export default function Hero() {
               className="text-xl md:text-2xl mb-10 text-gray-300"
               variants={item}
             >
-              {heroVideo?.description || "You want to hook them too?"}
+              You want to hook them too?
             </motion.p>
             <motion.div 
               className="flex flex-col sm:flex-row justify-center gap-5"

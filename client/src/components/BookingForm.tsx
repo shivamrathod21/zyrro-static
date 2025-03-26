@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { z } from "zod";
-import { useForm } from "react-hook-form";
+import { useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 import { useMutation } from "@tanstack/react-query";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
@@ -42,7 +42,12 @@ export default function BookingForm() {
 
   const bookingMutation = useMutation({
     mutationFn: (data: FormValues) => {
-      return apiRequest("POST", "/api/bookings", data);
+      return apiRequest({
+        method: "POST",
+        url: "/api/bookings",
+        data,
+        on401: "returnNull"
+      });
     },
     onSuccess: () => {
       toast({
@@ -52,7 +57,7 @@ export default function BookingForm() {
       });
       form.reset();
     },
-    onError: (error) => {
+    onError: (error: any) => {
       toast({
         title: "Submission Failed",
         description: error.message || "Please try again later",
@@ -95,7 +100,7 @@ export default function BookingForm() {
             transition={{ duration: 0.5, delay: 0.2 }}
             viewport={{ once: true }}
           >
-            <Form {...form}>
+            <FormProvider {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                 {/* Name & Email (2 columns on md+) */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -197,6 +202,8 @@ export default function BookingForm() {
                           {...field}
                           placeholder="Tell us about your project, timeline, and any specific requirements"
                           className="bg-[#222222] border-gray-700 text-white h-32"
+                          value={field.value}
+                          onChange={(e) => field.onChange(e.target.value)}
                         />
                       </FormControl>
                       <FormMessage />
@@ -251,7 +258,7 @@ export default function BookingForm() {
                   </Button>
                 </div>
               </form>
-            </Form>
+            </FormProvider>
           </motion.div>
         </div>
       </div>
