@@ -1,10 +1,36 @@
+# Dependencies
 node_modules/
+
+# Build outputs
 dist/
-.env
-.DS_Store
-*.log
-.vscode/
 build/
+
+# Local development
+.env
+*.sqlite
+database.sqlite
+*.local
+
+# Development scripts
+dev.ps1
+deploy-local.ps1
+deploy-local.sh
+start-dev.ps1
+
+# Generated files
+generated-icon.png
+attached_assets/
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+*.log
 coverage/
 server/public
 vite.config.ts.*
