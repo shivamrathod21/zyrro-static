@@ -28,7 +28,10 @@ export async function apiRequest<T = any, U = any>({
   
   const res = await fetch(fullUrl, {
     method,
-    headers: data ? { "Content-Type": "application/json" } : {},
+    headers: {
+      "Content-Type": "application/json",
+      "Accept": "application/json"
+    },
     body: data ? JSON.stringify(data) : undefined,
     credentials: "include",
   });
@@ -50,6 +53,9 @@ export const getQueryFn: <T>(options: {
     const fullUrl = url.startsWith('http') ? url : `${API_BASE_URL}${url}`;
     
     const res = await fetch(fullUrl, {
+      headers: {
+        "Accept": "application/json"
+      },
       credentials: "include",
     });
 

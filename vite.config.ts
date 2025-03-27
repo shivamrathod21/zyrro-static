@@ -13,7 +13,6 @@ export default defineConfig({
     react(),
     runtimeErrorOverlay(),
     themePlugin(),
-    // Removed Replit-specific plugins
   ],
   resolve: {
     alias: {
@@ -22,8 +21,21 @@ export default defineConfig({
     },
   },
   root: path.resolve(__dirname, "client"),
+  publicDir: path.resolve(__dirname, "client", "public"),
   build: {
     outDir: path.resolve(__dirname, "dist/public"),
     emptyOutDir: true,
   },
+  server: {
+    port: 5173,
+    strictPort: true,
+    proxy: {
+      '/api': {
+        target: 'http://localhost:3000',
+        changeOrigin: true,
+        secure: false,
+        ws: true
+      }
+    }
+  }
 });

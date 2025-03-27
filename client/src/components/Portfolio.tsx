@@ -139,9 +139,9 @@ export default function Portfolio() {
   };
 
   const stats = [
-    { label: "Projects Completed", value: "500+" },
-    { label: "Happy Clients", value: "200+" },
-    { label: "Years Experience", value: "5+" }
+    { label: "Projects Completed", value: "221+" },
+    { label: "Happy Clients", value: "30+" },
+    { label: "Agency Years Experience", value: "1+" }
   ];
 
   return (

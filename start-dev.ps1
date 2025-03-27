@@ -1,11 +1,14 @@
-# Start both frontend and backend servers
-Write-Host "Starting development servers..."
+# Kill any existing Node processes
+Get-Process -Name "node" -ErrorAction SilentlyContinue | Stop-Process -Force
 
-# Start the backend server in a new window
-Start-Process powershell -ArgumentList "-NoExit -Command `"$env:NODE_ENV='development'; npx tsx server/index.ts`""
+# Start the backend server
+Start-Process powershell -ArgumentList "-NoExit", "-Command", "cd G:\zyro; npm run build; node dist/index.js"
 
-# Start the frontend server in a new window
-Start-Process powershell -ArgumentList "-NoExit -Command `"$env:NODE_ENV='development'; npx vite --host`""
+# Wait a moment for the backend to start
+Start-Sleep -Seconds 2
+
+# Start the frontend server
+Start-Process powershell -ArgumentList "-NoExit", "-Command", "cd G:\zyro; npm run dev"
 
 Write-Host "Servers started! The website will be available at:"
 Write-Host "Frontend: http://localhost:5173"

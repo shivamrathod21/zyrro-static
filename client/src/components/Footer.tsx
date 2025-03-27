@@ -26,7 +26,7 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Branding - Logo & Tagline (Kept as per your request) */}
           <div className="md:col-span-1">
-            <img src="/logo.png" alt="Zyro-Visuals Logo" className="h-12" />
+            <img src="https://zyrovisuals8055.s3.us-west-2.amazonaws.com/zyrologowithoutbg.png" alt="Zyro-Visuals Logo" className="h-12" />
             <p className="text-gray-400 mt-2">Bringing your visuals to life.</p>
             {/* Social Icons */}
             <div className="flex space-x-4 mt-4">

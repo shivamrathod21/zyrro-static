@@ -1,0 +1,98 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'Zyro Visuals Backend Stack'
+
+Parameters:
+  VpcId:
+    Type: String
+    Description: VPC ID
+
+  PublicSubnet1Id:
+    Type: String
+    Description: Public Subnet ID
+
+  DBSecurityGroupId:
+    Type: String
+    Description: Database Security Group ID
+
+  KeyPairName:
+    Type: AWS::EC2::KeyPair::KeyName
+    Description: Name of an existing EC2 KeyPair for SSH access
+
+  InstanceType:
+    Type: String
+    Default: t2.micro
+    AllowedValues:
+      - t2.micro
+      - t2.small
+    Description: EC2 instance type
+
+Resources:
+  EC2SecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Security group for EC2 instance
+      VpcId: !Ref VpcId
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 3000
+          ToPort: 3000
+          CidrIp: 0.0.0.0/0
+      Tags:
+        - Key: Name
+          Value: zyro-ec2-sg
+
+  EC2Instance:
+    Type: AWS::EC2::Instance
+    Properties:
+      InstanceType: !Ref InstanceType
+      ImageId: ami-0287a05f0ef0e9d9a  # Amazon Linux 2023 AMI in ap-south-1
+      KeyName: !Ref KeyPairName
+      SubnetId: !Ref PublicSubnet1Id
+      SecurityGroupIds:
+        - !Ref EC2SecurityGroup
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/bash
+          yum update -y
+          yum install -y nodejs npm git
+          cd /home/ec2-user
+          git clone https://github.com/your-repo/zyro.git
+          cd zyro
+          npm install
+          npm run build
+          pm2 start dist/index.js
+      Tags:
+        - Key: Name
+          Value: zyro-backend-server
+
+  EC2ElasticIP:
+    Type: AWS::EC2::EIP
+    Properties:
+      Domain: vpc
+      InstanceId: !Ref EC2Instance
+      Tags:
+        - Key: Name
+          Value: zyro-backend-eip
+
+Outputs:
+  EC2PublicIP:
+    Description: Public IP of EC2 Instance
+    Value: !GetAtt EC2Instance.PublicIp
+    Export:
+      Name: !Sub "${AWS::StackName}-EC2PublicIP"
+
+  EC2ElasticIP:
+    Description: Elastic IP of EC2 Instance
+    Value: !Ref EC2ElasticIP
+    Export:
+      Name: !Sub "${AWS::StackName}-EC2ElasticIP"
+
+  EC2SecurityGroupId:
+    Description: Security Group ID of EC2 Instance
+    Value: !Ref EC2SecurityGroup
+    Export:
+      Name: !Sub "${AWS::StackName}-EC2SecurityGroupId" 
