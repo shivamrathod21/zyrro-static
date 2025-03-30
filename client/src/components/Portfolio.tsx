@@ -234,9 +234,7 @@ export default function Portfolio() {
               className="w-full sm:w-auto bg-[#FFD700] text-black hover:bg-[#FFD700]/80 transition-all duration-300"
             >
               <a
-                href="https://calendly.com/zyrovisuals/book"
-                target="_blank"
-                rel="noopener noreferrer"
+                href="#book"
                 className="inline-flex items-center justify-center"
               >
                 Book a Consultation
