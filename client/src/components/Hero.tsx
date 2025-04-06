@@ -141,8 +141,8 @@ export default function Hero() {
                 whileTap={{ scale: 0.95 }}
               >
                 <Button asChild className="bg-[#FFD700] text-black hover:bg-[#FFD700]/80 text-lg font-bold px-8 py-6 shadow-lg shadow-[#FFD700]/20">
-                  <a href="#book" className="inline-flex items-center">
-                    Book Now
+                  <a href="#portfolio" className="inline-flex items-center">
+                    View Portfolio
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
                     </svg>
@@ -154,7 +154,7 @@ export default function Hero() {
                 whileTap={{ scale: 0.95 }}
               >
                 <Button asChild variant="outline" className="border-white hover:bg-white/10 text-lg font-medium px-8 py-6">
-                  <a href="#portfolio">View Portfolio</a>
+                  <a href="#services">Our Services</a>
                 </Button>
               </motion.div>
             </motion.div>

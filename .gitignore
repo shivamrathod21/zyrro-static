@@ -1,15 +1,45 @@
-# Dependencies
-node_modules/
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
 
-# Build outputs
-dist/
+# Dependencies
+node_modules
+dist
+dist-ssr
+*.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Environment variables
+.env
+.env.*
+!.env.example
+
+# Build files
 build/
+out/
+
+# Cache
+.cache/
+.temp/
 
 # Local development
-.env
 *.sqlite
 database.sqlite
-*.local
 
 # Development scripts
 dev.ps1
@@ -22,15 +52,11 @@ generated-icon.png
 attached_assets/
 
 # IDE and editor files
-.vscode/
-.idea/
 *.swp
 *.swo
 
 # OS files
-.DS_Store
 Thumbs.db
-*.log
 coverage/
 server/public
 vite.config.ts.*

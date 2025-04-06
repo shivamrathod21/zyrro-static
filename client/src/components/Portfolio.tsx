@@ -228,22 +228,33 @@ export default function Portfolio() {
                 ))}
               </div>
             </div>
+          </div>
 
-            <Button
-              asChild
-              className="w-full sm:w-auto bg-[#FFD700] text-black hover:bg-[#FFD700]/80 transition-all duration-300"
+          <div className="text-center mt-12">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              viewport={{ once: true }}
             >
-              <a
-                href="#book"
-                className="inline-flex items-center justify-center"
+              <h3 className="text-2xl font-bold mb-4">Ready to Elevate Your Content?</h3>
+              <p className="text-gray-400 max-w-2xl mx-auto mb-8">
+                Explore our services and discover how we can help you create stunning gaming content that stands out.
+              </p>
+              <Button
+                asChild
+                className="w-full sm:w-auto bg-[#FFD700] text-black hover:bg-[#FFD700]/80 transition-all duration-300"
               >
-                Book a Consultation
-              </a>
-            </Button>
+                <a
+                  href="#services"
+                  className="inline-flex items-center justify-center"
+                >
+                  Explore Services
+                </a>
+              </Button>
+            </motion.div>
           </div>
         </motion.div>
-
-
       </div>
     </section>
   );

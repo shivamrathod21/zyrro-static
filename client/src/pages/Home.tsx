@@ -5,7 +5,6 @@ import WhyChooseUs from "@/components/WhyChooseUs";
 import Portfolio from "@/components/Portfolio";
 import Creators from "@/components/Creators";
 import Testimonials from "@/components/Testimonials";
-import BookingForm from "@/components/BookingForm";
 import Footer from "@/components/Footer";
 import CursorEffect from "@/components/CursorEffect";
 import CustomCursor from "@/components/CustomCursor";
@@ -100,9 +99,6 @@ export default function Home() {
         </section>
         <section id="testimonials">
           <Testimonials />
-        </section>
-        <section id="book">
-          <BookingForm />
         </section>
       </main>
       <Footer />

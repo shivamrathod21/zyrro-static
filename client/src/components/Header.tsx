@@ -97,45 +97,13 @@ export default function Header() {
           </Link>
 
           {/* Desktop Navigation */}
-          <NavigationMenu className="hidden md:flex">
-            <NavigationMenuList className="space-x-2">
-              <NavigationMenuItem>
-                <NavigationMenuLink
-                  className="text-white hover:text-[#FFD700] font-medium transition-colors duration-300 cursor-pointer font-['Iceland'] tracking-wider px-4 py-2 inline-block"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                  }}
-                >
-                  Home
-                </NavigationMenuLink>
-              </NavigationMenuItem>
-              <NavigationMenuItem>
-                <NavigationMenuLink
-                  className="text-white hover:text-[#FFD700] font-medium transition-colors duration-300 cursor-pointer font-['Iceland'] tracking-wider px-4 py-2 inline-block"
-                  onClick={scrollToSection('portfolio')}
-                >
-                  Portfolio
-                </NavigationMenuLink>
-              </NavigationMenuItem>
-              <NavigationMenuItem>
-                <NavigationMenuLink
-                  className="text-white hover:text-[#FFD700] font-medium transition-colors duration-300 cursor-pointer font-['Iceland'] tracking-wider px-4 py-2 inline-block"
-                  onClick={scrollToSection('creators')}
-                >
-                  Creators
-                </NavigationMenuLink>
-              </NavigationMenuItem>
-              <NavigationMenuItem>
-                <NavigationMenuLink
-                  className="text-white hover:text-[#FFD700] font-medium transition-colors duration-300 cursor-pointer font-['Iceland'] tracking-wider px-4 py-2 inline-block"
-                  onClick={scrollToSection('testimonials')}
-                >
-                  Testimonials
-                </NavigationMenuLink>
-              </NavigationMenuItem>
-            </NavigationMenuList>
-          </NavigationMenu>
+          <div className="hidden md:flex items-center space-x-8">
+            <a href="#services" onClick={scrollToSection('services')} className="text-white hover:text-[#FFD700] transition-colors duration-300">Services</a>
+            <a href="#whychooseus" onClick={scrollToSection('whychooseus')} className="text-white hover:text-[#FFD700] transition-colors duration-300">Why Choose Us</a>
+            <a href="#portfolio" onClick={scrollToSection('portfolio')} className="text-white hover:text-[#FFD700] transition-colors duration-300">Portfolio</a>
+            <a href="#creators" onClick={scrollToSection('creators')} className="text-white hover:text-[#FFD700] transition-colors duration-300">Creators</a>
+            <a href="#testimonials" onClick={scrollToSection('testimonials')} className="text-white hover:text-[#FFD700] transition-colors duration-300">Testimonials</a>
+          </div>
 
             {/* Social Media Icons */}
             <div className="flex items-center space-x-4">
@@ -177,11 +145,11 @@ export default function Header() {
                 className="bg-[#FFD700] text-black hover:bg-[#FFD700]/80 font-bold font-['Iceland'] tracking-wider"
               >
                 <a 
-                  href="#book" 
-                  onClick={scrollToSection('book')}
+                  href="#footer" 
+                  onClick={scrollToSection('footer')}
                   className="px-6"
                 >
-                  Book Now
+                  Contact Us
                 </a>
               </Button>
             </motion.div>
@@ -202,47 +170,20 @@ export default function Header() {
         {/* Mobile Menu */}
         <AnimatePresence>
           {mobileMenuOpen && (
-            <motion.div 
-              className="md:hidden pb-4 mt-4"
+            <motion.div
               initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: 'auto' }}
+              animate={{ opacity: 1, height: "auto" }}
               exit={{ opacity: 0, height: 0 }}
               transition={{ duration: 0.3 }}
+              className="md:hidden absolute top-full left-0 right-0 bg-black border-t border-gray-800 overflow-hidden"
             >
-              <div className="flex flex-col space-y-3">
-                <a 
-                  href="/"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                    setMobileMenuOpen(false);
-                  }}
-                  className="text-white hover:text-[#FFD700] font-medium py-2 transition-colors duration-300 font-['Iceland'] tracking-wider"
-                >
-                  Home
-                </a>
-                <a 
-                  href="#portfolio" 
-                  onClick={scrollToSection('portfolio')}
-                  className="text-white hover:text-[#FFD700] font-medium py-2 transition-colors duration-300 font-['Iceland'] tracking-wider"
-                >
-                  Portfolio
-                </a>
-                <a 
-                  href="#creators" 
-                  onClick={scrollToSection('creators')}
-                  className="text-white hover:text-[#FFD700] font-medium py-2 transition-colors duration-300 font-['Iceland'] tracking-wider"
-                >
-                  Creators
-                </a>
-                <a 
-                  href="#testimonials" 
-                  onClick={scrollToSection('testimonials')}
-                  className="text-white hover:text-[#FFD700] font-medium py-2 transition-colors duration-300 font-['Iceland'] tracking-wider"
-                >
-                  Testimonials
-                </a>
-
+              <div className="p-4 space-y-4">
+                <a href="#services" onClick={scrollToSection('services')} className="block text-white hover:text-[#FFD700] transition-colors duration-300">Services</a>
+                <a href="#whychooseus" onClick={scrollToSection('whychooseus')} className="block text-white hover:text-[#FFD700] transition-colors duration-300">Why Choose Us</a>
+                <a href="#portfolio" onClick={scrollToSection('portfolio')} className="block text-white hover:text-[#FFD700] transition-colors duration-300">Portfolio</a>
+                <a href="#creators" onClick={scrollToSection('creators')} className="block text-white hover:text-[#FFD700] transition-colors duration-300">Creators</a>
+                <a href="#testimonials" onClick={scrollToSection('testimonials')} className="block text-white hover:text-[#FFD700] transition-colors duration-300">Testimonials</a>
+                
                 <div className="flex items-center space-x-4 py-2">
                   <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="text-white hover:text-[#FFD700] transition-colors duration-300">
                     <TwitterIcon />
@@ -254,14 +195,6 @@ export default function Header() {
                     <YoutubeIcon />
                   </a>
                 </div>
-
-                <a 
-                  href="#book" 
-                  onClick={scrollToSection('book')}
-                  className="bg-[#FFD700] text-black px-4 py-2 rounded font-semibold hover:bg-opacity-80 transition-all duration-300 inline-block w-fit font-['Iceland'] tracking-wider"
-                >
-                  Book Now
-                </a>
               </div>
             </motion.div>
           )}

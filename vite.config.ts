@@ -27,8 +27,9 @@ export default defineConfig({
     emptyOutDir: true,
   },
   server: {
-    port: 5173,
-    strictPort: true,
+    port: 5175,
+    strictPort: false,
+    host: true,
     proxy: {
       '/api': {
         target: 'http://localhost:3000',

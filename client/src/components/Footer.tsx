@@ -21,7 +21,7 @@ const LinkedInIcon = (props: React.SVGProps<SVGSVGElement>) => (
 
 export default function Footer() {
   return (
-    <footer className="py-12 bg-[#222222] border-t border-gray-800">
+    <footer id="footer" className="py-12 bg-[#222222] border-t border-gray-800">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Branding - Logo & Tagline (Kept as per your request) */}
@@ -90,11 +90,6 @@ export default function Footer() {
                   Testimonials
                 </a>
               </li>
-              <li>
-                <a href="#book" className="text-gray-400 hover:text-[#FFD700] transition-colors duration-300">
-                  Book Now
-                </a>
-              </li>
             </ul>
           </div>
 
@@ -134,13 +129,41 @@ export default function Footer() {
           <div className="md:col-span-1">
             <h3 className="text-white font-semibold text-lg mb-4">Contact Us</h3>
             <ul className="space-y-3">
-              <li className="flex items-start">
-                <EnvelopeIcon className="text-[#FFD700] mt-1 mr-3 h-5 w-5 flex-shrink-0" />
-                <span className="text-gray-400">zyrovisual158@gmail.com</span>
+              <li>
+                <motion.a 
+                  href="mailto:zyrovisual158@gmail.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-start group"
+                  whileHover={{ y: -2, scale: 1.02 }}
+                >
+                  <EnvelopeIcon className="text-[#FFD700] mt-1 mr-3 h-5 w-5 flex-shrink-0 group-hover:filter group-hover:drop-shadow-[0_0_8px_rgba(255,215,0,0.5)]" />
+                  <span className="text-gray-400 group-hover:text-[#FFD700] transition-colors duration-300">zyrovisual158@gmail.com</span>
+                </motion.a>
               </li>
-              <li className="flex items-start">
-                <DiscordIcon className="text-[#FFD700] mt-1 mr-3 h-5 w-5 flex-shrink-0" />
-                <span className="text-gray-400">discord.com/users/863354644926693396</span>
+              <li>
+                <motion.a 
+                  href="https://discord.com/users/863354644926693396"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-start group"
+                  whileHover={{ y: -2, scale: 1.02 }}
+                >
+                  <DiscordIcon className="text-[#FFD700] mt-1 mr-3 h-5 w-5 flex-shrink-0 group-hover:filter group-hover:drop-shadow-[0_0_8px_rgba(255,215,0,0.5)]" />
+                  <span className="text-gray-400 group-hover:text-[#FFD700] transition-colors duration-300">discord.com/users/863354644926693396</span>
+                </motion.a>
+              </li>
+              <li>
+                <motion.a 
+                  href="https://x.com/ZyroVisual"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-start group"
+                  whileHover={{ y: -2, scale: 1.02 }}
+                >
+                  <TwitterIcon className="text-[#FFD700] mt-1 mr-3 h-5 w-5 flex-shrink-0 group-hover:filter group-hover:drop-shadow-[0_0_8px_rgba(255,215,0,0.5)]" />
+                  <span className="text-gray-400 group-hover:text-[#FFD700] transition-colors duration-300">@ZyroVisual</span>
+                </motion.a>
               </li>
               <li className="flex items-start">
                 <ClockIcon className="text-[#FFD700] mt-1 mr-3 h-5 w-5 flex-shrink-0" />

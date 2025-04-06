@@ -5,8 +5,6 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "./components/ui/toaster";
 import NotFound from "@/pages/not-found";
 import Home from "@/pages/Home";
-import AdminDashboard from "@/pages/admin";
-import AdminLogin from "@/pages/admin/login";
 import TestPage from "@/pages/test";
 import SEO from "@/components/SEO";
 
@@ -26,22 +24,6 @@ const routes = [
     seo: {
       title: "Test Page - Zyro Visuals",
       description: "Test page for Zyro Visuals video editing services."
-    }
-  },
-  {
-    path: "/admin",
-    component: AdminDashboard,
-    seo: {
-      title: "Admin Dashboard - Zyro Visuals",
-      description: "Admin dashboard for Zyro Visuals content management."
-    }
-  },
-  {
-    path: "/admin/login",
-    component: AdminLogin,
-    seo: {
-      title: "Admin Login - Zyro Visuals",
-      description: "Login to access the Zyro Visuals admin dashboard."
     }
   }
 ];
